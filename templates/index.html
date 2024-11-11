@@ -1,29 +1,115 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فرم ثبت اطلاعات جلسه روضه</title>
+    <link rel="stylesheet" href="{% static 'custom/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'custom/css/persian-datepicker.min.css' %}">
+    <script src="{% static 'custom/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'custom/js/persian-date.min.js' %}"></script>
+    <script src="{% static 'custom/js/persian-datepicker.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'custom/css/style.css' %}">
+</head>
+<body dir="rtl">
+<div class="container">
+    <h1>فرم ثبت اطلاعات جلسه روضه</h1>
+    {% if status == True %}
+    <h3 class="alert alert-success text-center">{{ status_message }}</h3>
+    {% elif status == False %}
+    <h3 class="alert alert-danger text-center">{{ status_message }}</h3>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="phone">📞 شماره تماس:</label>
+            <input type="text" class="form-control" id="phone" name="phone" required>
+        </div>
+        <div class="form-group">
+            <label for="date">📅 تاریخ دقیق:</label>
+            <input type="text" class="form-control" id="date" name="date" required>
+        </div>
+        <div class="form-group">
+            <label for="time">⏰ ساعت دقیق:</label>
+            <input type="text" class="form-control" id="time" name="time" required>
+        </div>
+        <div class="form-group">
+            <label for="num_attendees">👥 تعداد حاضرین:</label>
+            <input type="number" class="form-control" id="num_attendees" name="num_attendees">
+        </div>
+        <div class="form-group">
+            <label for="gender_attendees">👥 جنسیت حاضرین:</label>
+            <select class="form-control" id="gender_attendees" name="gender_attendees">
+                <option value="مرد">مرد</option>
+                <option value="زن">زن</option>
+                <option value="مرد و زن">مرد و زن</option>
+                <option value="کودکان">کودکان</option>
+                <option value="مختلط">مختلط</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="education_min_attendees">📚 حداقل تحصیلات حاضرین:</label>
+            <select class="form-control" id="education_min_attendees" name="education_min_attendees">
+                <option value="بی سواد">بی سواد</option>
+                <option value="تحصیلات ابتدایی">تحصیلات ابتدایی</option>
+                <option value="تحصیلات راهنمایی">تحصیلات راهنمایی</option>
+                <option value="تحصیلات دیپلم">تحصیلات دیپلم</option>
+                <option value="تحصیلات فوق دیپلم">تحصیلات فوق دیپلم</option>
+                <option value="تحصیلات لیسانس">تحصیلات لیسانس</option>
+                <option value="تحصیلات فوق لیسانس">تحصیلات فوق لیسانس</option>
+                <option value="تحصیلات دکترا">تحصیلات دکترا</option>
+                <option value="تحصیلات پسا دکترا">تحصیلات پسا دکترا</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="education_max_attendees">📚 حداکثر تحصیلات حاضرین:</label>
+            <select class="form-control" id="education_max_attendees" name="education_max_attendees">
+                <option value="بی سواد">بی سواد</option>
+                <option value="تحصیلات ابتدایی">تحصیلات ابتدایی</option>
+                <option value="تحصیلات راهنمایی">تحصیلات راهنمایی</option>
+                <option value="تحصیلات دیپلم">تحصیلات دیپلم</option>
+                <option value="تحصیلات فوق دیپلم">تحصیلات فوق دیپلم</option>
+                <option value="تحصیلات لیسانس">تحصیلات لیسانس</option>
+                <option value="تحصیلات فوق لیسانس">تحصیلات فوق لیسانس</option>
+                <option value="تحصیلات دکترا">تحصیلات دکترا</option>
+                <option value="تحصیلات پسا دکترا">تحصیلات پسا دکترا</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="city">🏙️ نام شهر:</label>
+            <input type="text" class="form-control" id="city" name="city" required>
+        </div>
+        <div class="form-group">
+            <label for="topic">📜 موضوع روضه پیشنهادی شما:</label>
+            <textarea class="form-control" id="topic" name="topic" rows="4" required></textarea>
+        </div>
+        <p>🎙️ در صورت امکان، اگر جلسه را ضبط کنید و برای ما ارسال کنید بسیار سپاسگزار می‌شویم.</p>
+        <button type="submit" class="btn btn-success btn-block">ثبت اطلاعات</button>
+    </form>
+</div>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-
-    <title>صفحه اصلی</title>
-  </head>
-  <body>
-    <h1 class="text-center text-success mt-4">سلام دنیا!</h1>
-
-    <!-- Optional JavaScript; choose one of the two! -->
-
-    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
-    -->
-  </body>
+<script>
+    $(document).ready(function () {
+        $('#date').pDatepicker({
+            format: 'L',
+            maxDate: new persianDate().add('month', 3).valueOf(),
+            minDate: new persianDate(),
+            onSelect: function(unix){
+                console.log('datepicker select : ' + unix);
+            },
+        });
+        $('#time').pDatepicker({
+            format: 'HH:mm',
+            timePicker:{
+                enabled:true,
+                second:{
+                    enabled:false,
+                }
+            },
+            onlyTimePicker: true,
+        });
+    });
+</script>
+</body>
 </html>

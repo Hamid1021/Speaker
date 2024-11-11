@@ -1,0 +1,71 @@
+body {
+    font-family: 'Tahoma', sans-serif;
+    background: linear-gradient(to right, #f0f0f0, #d6d6d6);
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+}
+.container {
+    max-width: 700px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-weight: bold;
+    margin-top: 0;
+    color: #444;
+    flex: 1;
+    margin-right: 10px;
+    text-align: right;
+}
+.form-group input, .form-group textarea, .form-group select {
+    flex: 2;
+    border: 1px solid #ddd;
+    border-radius: 0px 5px;
+    transition: all 0.3s ease;
+}
+.form-group input[type="date"] {
+    position: relative;
+    direction: ltr;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: #c59d5f;
+    box-shadow: 0 0 5px rgba(197, 157, 95, 0.5);
+    outline: none;
+}
+.form-group textarea {
+    resize: vertical;
+}
+button {
+    background: #c59d5f;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+button:hover {
+    background: #b58950;
+}
+p {
+    color: #555;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+}
