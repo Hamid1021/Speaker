@@ -19,6 +19,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('account.urls', namespace="account")),
+    path('', include('application.urls', namespace="application")),
     path('', include('map_xml.urls', namespace="sitemap")),
     # ckeditor
     path('ckeditor/', include('ckeditor_uploader.urls')),

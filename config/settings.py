@@ -169,6 +169,7 @@ INSTALLED_APPS = [
     
     # Added Application
     "account.apps.AccountConfig",
+    "application.apps.ApplicationConfig",
     'map_xml.apps.MapXmlConfig',
 ]
 
