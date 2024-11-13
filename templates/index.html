@@ -15,11 +15,6 @@
 <body dir="rtl">
 <div class="container">
     <h1>فرم ثبت اطلاعات جلسه روضه</h1>
-    {% if status == True %}
-    <h3 class="alert alert-success text-center">{{ status_message }}</h3>
-    {% elif status == False %}
-    <h3 class="alert alert-danger text-center">{{ status_message }}</h3>
-    {% endif %}
     <form method="post">
         {% csrf_token %}
         <div class="form-group">

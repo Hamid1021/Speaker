@@ -6,12 +6,34 @@ from django.utils import timezone
 from django.core.mail import send_mail as send
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from application.send_message import send_message_to_channel
 
 
 def get_filename_ext(filepath):
     base_name = os.path.basename(filepath)
     name, ext = os.path.splitext(base_name)
     return name, ext
+
+
+def send_message_by_template(*args, **kwargs):
+    with open("message_template.txt", "+r", encoding='utf-8') as f:
+        file = f.read()
+        file = file.format(
+            phone = kwargs.get("phone"),
+            date = kwargs.get("date"),
+            time = kwargs.get("time"),
+            num_attendees = kwargs.get("num_attendees"),
+            gender_attendees = kwargs.get("gender_attendees"),
+            education_min_attendees = kwargs.get("education_min_attendees"),
+            education_max_attendees = kwargs.get("education_max_attendees"),
+            city = kwargs.get("city"),
+            topic = kwargs.get("topic"),
+            speaker = "\n🎙 سخنران: " + str(kwargs.get("speaker")) + "\n" if kwargs.get("speaker") else "",
+        )
+    channel_message, channel_status = send_message_to_channel("sendMessage", kwargs.get("chatID"), kwargs.get("topic"), file)
+    kwargs.get("obj").related_message = channel_message
+    kwargs.get("obj").save()
+
 
 
 class SendEmail(object):
@@ -111,6 +133,15 @@ def jalali_converter(time):
     return persian_numbers_converter(output)
 
 
+def jalali_converter_date(time):
+    time_to_str = f"{time.year},{time.month},{time.day}"
+    time_to_tuple = jalali.Gregorian(time_to_str).persian_tuple()
+    mon = time_to_tuple[1] if time_to_tuple[1] > 9 else "0" + str(time_to_tuple[1])
+    day = time_to_tuple[2] if time_to_tuple[2] > 9 else "0" + str(time_to_tuple[1])
+    output = f"{time_to_tuple[0]}/{mon}/{day}"
+    return persian_numbers_converter(output)
+
+
 def jalali_converter_en(time):
     time = timezone.localtime(time)
     time_to_str = f"{time.year},{time.month},{time.day}"
@@ -193,3 +224,8 @@ def gregorian_converter(time:str):
     year, month, day = jalali.Persian(time.split(" ")[0]).gregorian_tuple()
     hour, minute, second = [int(i) for i in time.split(" ")[1].split(":")]
     return datetime(year, month, day, hour, minute, second)
+
+
+def gregorian_converter_date(time:str):
+    year, month, day = jalali.Persian(*[int(x) for x in time.split("/")]).gregorian_tuple()
+    return datetime(year, month, day, 0, 0, 0)

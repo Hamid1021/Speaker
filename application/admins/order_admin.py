@@ -4,10 +4,10 @@ from django.http import HttpRequest
 # from application.send_message import edit_message_from_channel
 
 
-# "phone", "date", "time", "num_attendees", "gender_attendees", "education_min_attendees",
-# "education_max_attendees", "city", "topic", "status", "related_message"
+# "phone", "date", "jdate", "time", "num_attendees", "gender_attendees", "education_min_attendees",
+# "education_max_attendees", "city", "topic", "status", "related_message", "is_assign", 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ["topic", "phone", "date", "time", "num_attendees", "gender_attendees", "city", "status",]
+    list_display = ["topic", "phone", "jdate", "time", "num_attendees", "gender_attendees", "city", "status", "is_assign"]
     search_fields = [
         "phone", "date", "time", "num_attendees", "gender_attendees",
         "education_min_attendees", "education_max_attendees", "city", "topic",
@@ -19,7 +19,7 @@ class OrderAdmin(admin.ModelAdmin):
         "phone", "date", "time", "num_attendees", "gender_attendees", "education_min_attendees",
         "education_max_attendees", "city", "topic", "related_message"
     ]
-    list_editable = ["status",]
+    list_editable = ["status", "is_assign"]
 
     # def save_model(self, request: HttpRequest, obj, form: ModelForm, change: bool) -> None:
     #     if change:
