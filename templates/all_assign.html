@@ -10,6 +10,16 @@
 </head>
 <body>
     <div class="container">
+        {% if not request.user.is_authenticated %}
+            <div class="alert alert-warning text-center mt-5" role="alert">
+                لطفاً ابتدا لاگین کنید.
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-3">
+                    <a href="{% url 'account:login' %}" class="btn btn-primary btn-block mt-2">لاگین</a>
+                </div>
+            </div>
+        {% elif request.user.is_superuser %}
         <h1 class="alert alert-info m-5 text-center">لیست سخنرانی های ارسال شده در گروه</h1>
         
         <table dir="rtl" class="table table-active table-bordered table-dark table-striped text-center">
@@ -38,6 +48,11 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div class="alert alert-warning text-center mt-5" role="alert">
+            شما مجاز به دیدن این صفحه نیستید
+        </div>
+    {% endif %}
     </div>
 </body>
 </html>

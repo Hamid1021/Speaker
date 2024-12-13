@@ -106,23 +106,28 @@ def assign(request):
     return render(request, "assign.html", context)
 
 
-def change_status(request,speaker_id ,order_id):
-    get_speaker = Speaker.objects.filter(user=request.user).first()
-    if get_speaker:
-        
-        pass
-        
+def change_status(request, speaker_id, order_id):
+    get_speaker = Speaker.objects.filter(user=request.user, id=speaker_id).first()
+    if not get_speaker:
+        return redirect('application:select_order_by_speaker')
+
     order = Order.objects.get(id=order_id)
-    if order.status == "uc":
-        order.status = "c"
-    else:
-        order.status = "uc"
-    order.save()
+    
+    if order.speaker_id == speaker_id:
+        if order.status == "uc":
+            order.status = "c"
+        else:
+            order.status = "uc"
+        order.save()
+
     return redirect(reverse("application:speaker_assigned_orders", args=[speaker_id]))
 
 
 def speaker_assigned_orders(request, speaker_id):
-    speaker = Speaker.objects.get(id=speaker_id)
+    speaker = Speaker.objects.filter(user=request.user, id=speaker_id).first()
+    if not speaker:
+        return redirect('application:select_order_by_speaker')
+    
     assigned_orders = AssignOrderSpeaker.objects.filter(speaker=speaker)
     
     context = {
@@ -130,8 +135,6 @@ def speaker_assigned_orders(request, speaker_id):
         'assigned_orders': assigned_orders
     }
     return render(request, 'speaker_assigned_orders.html', context)
-
-
 
 
 def edit_assign(request, pk):
@@ -214,7 +217,3 @@ def select_order_by_speaker(request):
         context["selected_orders"] = selected_orders
     
     return render(request, 'select_order_by_speaker.html', context)
-
-
-
-

@@ -52,7 +52,7 @@ def register_user(request):
                 #     login(request, user=user)
                 #     return redirect(reverse("admin:index"))
                 # login(request, user=user)
-                return redirect("application:success_select_order")
+                return redirect(reverse("application:select_order_by_speaker"))
             except:
                 er_message = "مشکلی وجود دارد لطفا از راه های ارتباطی به ما اطلاع بدهید"
 

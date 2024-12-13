@@ -17,7 +17,7 @@
                     <a href="{% url 'account:login' %}" class="btn btn-primary btn-block mt-2">لاگین</a>
                 </div>
             </div>
-        {% elif not request.user.is_superusers %}
+        {% elif not request.user.is_superuser %}
             <h1 class="text-center">انتخاب سفارش</h1>
             <form method="post">
                 {% csrf_token %}
@@ -52,12 +52,15 @@
                         <button type="submit" class="btn btn-success btn-block mt-3">ذخیره</button>
                     </div>
                     <div class="col-3">
-                        <a href="{% url 'application:speaker_assigned_orders' request.user.speaker.id %}" class="btn btn-info btn-block mt-3">لیست برنامه‌ها</a>
+                        <a href="{% url 'application:speaker_assigned_orders' form.instance.speaker.id %}" class="btn btn-info btn-block mt-3">لیست برنامه‌ها</a>
                     </div>
                 </div>
-                
                 {% comment %} <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back();">بازگشت</button> {% endcomment %}
             </form>
+            {% else %}
+            <div class="alert alert-warning text-center mt-5" role="alert">
+                شما مجاز به دیدن این صفحه نیستید
+            </div>
         {% endif %}
     </div>
 
