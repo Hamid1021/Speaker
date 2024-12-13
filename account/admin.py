@@ -53,7 +53,7 @@ class USERAdmin(UserAdmin):
         return redirect(reverse("account:register"))
         # return super().add_view(request, form_url, extra_context)
     
-    list_display = ('username', 'phone_number', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser',)
+    list_display = ('username', 'phone_number', 'email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser',)
     list_display_links = ('username', 'phone_number')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'gender')
     search_fields = ('username', 'first_name', 'last_name', 'email', 'bio')

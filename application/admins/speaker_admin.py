@@ -7,7 +7,7 @@ from application.Entities.Speaker_model import Speaker
 # "is_deleted","jregister_time"
 
 class SpeakerAdmin(admin.ModelAdmin):
-    list_display = ["name","family","total_number_of_lectures","gender_attendees","jregister_time","status", "is_deleted",]
-    list_filter = ["status", "is_deleted", "gender_attendees",]
+    list_display = ["name","family","total_number_of_lectures","jregister_time","status",]
+    list_filter = ["status",]
     search_fields = ["name","family","age","phone","address","education_attendees",]
     readonly_fields = ["total_number_of_lectures",]

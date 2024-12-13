@@ -9,6 +9,16 @@
 </head>
 <body>
     <div class="container">
+        {% if not request.user.is_authenticated %}
+        <div class="alert alert-warning text-center mt-5" role="alert">
+            لطفاً ابتدا لاگین کنید.
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <a href="{% url 'account:login' %}" class="btn btn-primary btn-block mt-2">لاگین</a>
+            </div>
+        </div>
+        {% elif request.user.is_superusers %}
         <h1 class="alert alert-info m-5 text-center">اتصال هوشمند سفارشات به سخنران‌ها</h1>
         <a href="{% url 'application:do_assign' %}" class="btn btn-info float-right mb-3 mr-1">اتصال هوشمند سفارشات به سخنران‌ها</a>
         <a href="{% url 'application:sent_to_channel' %}" class="btn btn-success float-right mb-3 mr-1">ارسال به گروه ایتا</a>
@@ -43,6 +53,11 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div class="alert alert-warning text-center mt-5" role="alert">
+            شما مجاز به دیدن این صفحه نیستید
+        </div>
+        {% endif %}
     </div>
 
     <script>

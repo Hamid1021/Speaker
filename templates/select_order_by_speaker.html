@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>انتخاب سفارش</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-5">
+        {% if not request.user.is_authenticated %}
+            <div class="alert alert-warning text-center" role="alert">
+                لطفاً ابتدا لاگین کنید.
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-3">
+                    <a href="{% url 'account:login' %}" class="btn btn-primary btn-block mt-2">لاگین</a>
+                </div>
+            </div>
+        {% elif not request.user.is_superusers %}
+            <h1 class="text-center">انتخاب سفارش</h1>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_speaker">سخنران:</label>
+                    <input type="text" id="id_speaker" name="speaker" class="form-control" value="{{ form.instance.speaker }}" readonly>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="all_orders">لیست همه سفارشات</label>
+                        <select id="all_orders" class="form-control" multiple style="height: 400px;">
+                            {% for order in all_orders %}
+                                <option value="{{ order.id }}">{{ order }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="align-items-center col-md-1 d-flex flex-column justify-content-center mt-4">
+                        <button style="width: 35px;height: 35px;padding: 0;" type="button" class="btn btn-primary mb-2" onclick="addOrder()">&#62;</button>
+                        <button style="width: 35px;height: 35px;padding: 0;" type="button" class="btn btn-primary" onclick="removeOrder()">&#60;</button>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="selected_orders">سفارشات انتخاب شده</label>
+                        <select id="selected_orders" name="order" class="form-control" multiple style="height: 400px;">
+                            {% for order in selected_orders %}
+                                <option value="{{ order.id }}" selected>{{ order }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-success btn-block mt-3">ذخیره</button>
+                    </div>
+                    <div class="col-3">
+                        <a href="{% url 'application:speaker_assigned_orders' request.user.speaker.id %}" class="btn btn-info btn-block mt-3">لیست برنامه‌ها</a>
+                    </div>
+                </div>
+                
+                {% comment %} <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back();">بازگشت</button> {% endcomment %}
+            </form>
+        {% endif %}
+    </div>
+
+    <script>
+        function addOrder() {
+            const allOrders = document.getElementById('all_orders');
+            const selectedOrders = document.getElementById('selected_orders');
+            const selectedOptions = Array.from(allOrders.selectedOptions);
+            selectedOptions.forEach(option => {
+                selectedOrders.appendChild(option);
+            });
+            updateSelectedOrders();
+        }
+
+        function removeOrder() {
+            const selectedOrders = document.getElementById('selected_orders');
+            const allOrders = document.getElementById('all_orders');
+            const selectedOptions = Array.from(selectedOrders.selectedOptions);
+            selectedOptions.forEach(option => {
+                allOrders.appendChild(option);
+            });
+            updateSelectedOrders();
+        }
+
+        function updateSelectedOrders() {
+            const selectedOrders = document.getElementById('selected_orders');
+            for (let i = 0; i < selectedOrders.options.length; i++) {
+                selectedOrders.options[i].selected = true;
+            }
+        }
+    </script>
+
+    <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</body>
+</html>

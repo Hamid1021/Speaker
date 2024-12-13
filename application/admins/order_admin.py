@@ -7,16 +7,16 @@ from django.http import HttpRequest
 # "phone", "date", "jdate", "time", "num_attendees", "gender_attendees", "education_min_attendees",
 # "education_max_attendees", "city", "topic", "status", "related_message", "is_assign", "is_selected"
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ["topic", "phone", "jdate", "time", "num_attendees", "gender_attendees", "city", "status", "is_assign", "is_selected"]
+    list_display = ["topic", "phone", "jdate", "time", "num_attendees", "city", "status", "is_assign",]
     search_fields = [
-        "phone", "date", "time", "num_attendees", "gender_attendees",
+        "phone", "date", "time", "num_attendees",
         "education_min_attendees", "education_max_attendees", "city", "topic",
     ]
     list_filter = [
         "status",
     ]
     readonly_fields = [
-        "phone", "date", "time", "num_attendees", "gender_attendees", "education_min_attendees",
+        "phone", "date", "time", "num_attendees", "education_min_attendees",
         "education_max_attendees", "city", "topic", "related_message"
     ]
     # list_editable = ["status", "is_assign"]

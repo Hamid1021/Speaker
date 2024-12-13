@@ -15,31 +15,11 @@ class OrderManage(models.Manager):
             raise Exception
         except Exception as e:
             return obj, False
-    
-    def get_all_not_selected(self):
-        return self.get_queryset().filter(is_selected=False)
-    
-    def get_all_selected(self):
-        return self.get_queryset().filter(is_selected=True)
-
-    def make_as_selected(self, order_pk):
-        try:
-            obj = self.get_queryset().get(pk=order_pk)
-            obj.is_selected = True
-            obj.save()
-            return True
-        except:
-            return False
         
-    def make_as_not_selected(self, order_pk):
-        try:
-            obj = self.get_queryset().get(pk=order_pk)
-            obj.is_selected = False
-            obj.save()
-            return True
-        except:
-            return False
+    def get_all_not_assign(self):
+        return self.get_queryset().filter(is_assign=False)        
 
+    
 class Order(models.Model):
     status_choice = (
         ("uc", "انجام نشده"), ("c", "انجام شده")
@@ -53,11 +33,10 @@ class Order(models.Model):
     education_max_attendees = models.CharField("حداکثر سواد حاضران", null=True, blank=True, default="", max_length=255)
     city = models.CharField("شهر", null=True, blank=True, default="", max_length=255)
     topic = models.CharField("موضوع روضه", null=True, blank=True, default="", max_length=255)
-    status = models.CharField("وضعیت", null=False, blank=False, default="uc", choices=status_choice, max_length=2)
-    related_message = models.ForeignKey('ChannelMessage', on_delete=models.DO_NOTHING, null=True, verbose_name="پیام مرتبط")
+    status = models.CharField("وضعیت انجام", null=False, blank=False, default="uc", choices=status_choice, max_length=2)
+    related_message = models.ForeignKey(ChannelMessage, on_delete=models.DO_NOTHING, null=True, verbose_name="پیام مرتبط")
     is_assign = models.BooleanField("مرتبط شده؟", null=False, blank=False, default=False)
     is_message_send = models.BooleanField("پیام ارسال شده؟", null=False, blank=False, default=False)
-    is_selected = models.BooleanField("انتخاب شده", null=False, blank=False, default=False)
     
     def __str__(self):
         return f"{self.topic} - {jalali_converter_date(self.date)} - {self.time}"
@@ -77,11 +56,23 @@ class Order(models.Model):
     objects = OrderManage()
 
 
-class OrderSpeaker(models.Model):
-    speaker = models.ForeignKey('Speaker', on_delete=models.DO_NOTHING, verbose_name="سخنران")
-    order = models.ManyToManyField('Order', verbose_name="سفارش", related_name="order_set", null=True, blank=True)
+
+class SelectOrderSpeaker(models.Model):
+    speaker = models.ForeignKey(Speaker, on_delete=models.DO_NOTHING, verbose_name="سخنران", editable=False)
+    order = models.ManyToManyField('Order', verbose_name="سفارش", related_name="order_set", blank=True,)
+    
+    def __str__(self):
+        return f"{self.pk}"
+    class Meta:
+        verbose_name = "انتخاب سفارش"
+        verbose_name_plural = "سفارشات انتخاب شده"
+
+
+class AssignOrderSpeaker(models.Model):
+    speaker = models.ForeignKey(Speaker, on_delete=models.DO_NOTHING, verbose_name="سخنران")
+    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, verbose_name="سفارش", null=True, blank=True)
     date = models.DateTimeField("زمان ثبت", default=timezone.now, null=True, blank=True)
-    related_message = models.ForeignKey('ChannelMessage', on_delete=models.DO_NOTHING, null=True, verbose_name="پیام مرتبط")
+    related_message = models.ForeignKey(ChannelMessage, on_delete=models.DO_NOTHING, null=True, verbose_name="پیام مرتبط")
     is_message_send = models.BooleanField("پیام ارسال شده؟", null=False, blank=False, default=False)
 
     def jdate(self):

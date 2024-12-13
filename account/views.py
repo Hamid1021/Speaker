@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import Group
 from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
 
@@ -10,7 +9,7 @@ from account.forms import SingUpForm, LoginForm
 
 def login_user(request):
     if request.user.is_authenticated:
-        return redirect(reverse("Home:Home"))
+        return redirect(reverse("application:select_order_by_speaker"))
     form = LoginForm(request.POST or None)
     if request.POST:
         if form.is_valid():
@@ -20,7 +19,7 @@ def login_user(request):
             if not user.is_superuser:
                 request.session.set_expiry(20 * 60)
                 login(request, user=user)
-                return redirect(reverse("admin_panel:all_news"))
+                return redirect(reverse("application:select_order_by_speaker"))
             login(request, user=user)
             return redirect(reverse("admin:index"))
 
@@ -53,7 +52,7 @@ def register_user(request):
                 #     login(request, user=user)
                 #     return redirect(reverse("admin:index"))
                 # login(request, user=user)
-                return redirect(str(reverse("admin:app_list", kwargs={"app_label": "account"}))+"user/")
+                return redirect("application:success_select_order")
             except:
                 er_message = "مشکلی وجود دارد لطفا از راه های ارتباطی به ما اطلاع بدهید"
 

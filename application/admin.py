@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from application.Entities.order_model import Order, OrderSpeaker
+from application.Entities.order_model import Order, SelectOrderSpeaker, AssignOrderSpeaker
 from application.admins.order_admin import OrderAdmin
-from application.admins.order_speaker_admin import OrderSpeakerAdmin
+from application.admins.order_speaker_admin import AssignOrderSpeakerAdmin, SelectOrderSpeakerAdmin
 
 from application.Entities.channel_message_model import ChannelMessage, ChatUser, FromUser
 from application.admins.message_admin import ChannelMessageAdmin, ChatUserAdmin, FromUserAdmin
@@ -16,4 +16,5 @@ admin.site.register(ChannelMessage, ChannelMessageAdmin)
 admin.site.register(ChatUser, ChatUserAdmin)
 admin.site.register(FromUser, FromUserAdmin)
 admin.site.register(Speaker, SpeakerAdmin)
-admin.site.register(OrderSpeaker, OrderSpeakerAdmin)
+admin.site.register(SelectOrderSpeaker, SelectOrderSpeakerAdmin)
+admin.site.register(AssignOrderSpeaker, AssignOrderSpeakerAdmin)

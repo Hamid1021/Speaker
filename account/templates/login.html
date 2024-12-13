@@ -1,77 +1,152 @@
-{% extends "rtl/shared/base/_layout.html" %}
-{% load static render_partial get_obj_with_index %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>ورود به حساب</title>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style media="screen">
+      *,
+*:before,
+*:after{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #080710;
+}
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+.background .shape{
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border-radius: 50%;
+}
+.shape:first-child{
+    background: linear-gradient(
+        #1845ad,
+        #23a2f6
+    );
+    left: -80px;
+    top: -80px;
+}
+.shape:last-child{
+    background: linear-gradient(
+        to right,
+        #ff512f,
+        #f09819
+    );
+    right: -30px;
+    bottom: -80px;
+}
+form{
+    height: 520px;
+    width: 400px;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+}
+form *{
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+form h3{
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+}
 
-{% block title %}
-{{ site_name }} | ورود به سایت
-{% endblock title %}
+label{
+    display: block;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+}
+input{
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+::placeholder{
+    color: #e5e5e5;
+}
+button{
+    margin-top: 50px;
+    width: 100%;
+    background-color: #ffffff;
+    color: #080710;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover{
+    background-color: #98cf93;
+}
+.err {
+    color:red;
+    font-weight: bold;
+    text-align:right;
+    background-color:#55bd94;
+    padding:2px;
+    margin:3px;
+    border-radius: 0px 5px 0px 5px;
+}
 
-{% block meta %}
-    <link rel="canonical" href="{{ request.path }}"/>
-    <meta name="keywords" content="اخبار, خبر, ریسک نیوز, فرهنگی, ورزشی, اقتصادی">
-    <meta name="description" content="آخرین اخبار اقتصادی را می توانید به سادگی با ما دریافت کنید">
-    <meta name="author" content="پارس کیان">
-    <meta name="robots" content="index, follow">
-    <link rel="alternate" href="/" hreflang="fa"/>
-    <meta name="language" content="fa"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-{% endblock meta %}
-
-{% block main %}
-
-    <!-- Start Page Banner -->
-    <div class="page-title-area">
-        <div class="container">
-            <div class="page-title-content mt-5">
-                <h2>ورود کاربران</h2>
-                <ul>
-                    <li><a href="/">صفحه اصلی</a></li>
-                    <li>ورود کاربران</li>
-                </ul>
-            </div>
-        </div>
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
     </div>
-    <!-- End Page Banner -->
+    <form method="post">
+        {% csrf_token %}
+        <h3>وارد شوید</h3>
 
-    <!-- Start Login Area -->
-    <section class="login-area ptb-50">
-        <div class="container">
-            <div class="login-form">
-                <h2>ورود کاربران</h2>
-                <form method="post">
-                {% csrf_token %}
-                    <div class="form-group">
-                        {{ form.username }}
-                        {% for err in form.username.errors %}
-                            <p class="text-danger">{{ err }}</p>
-                        {% endfor %}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form.password }}
-                        {% for err in form.password.errors %}
-                            <p class="text-danger">{{ err }}</p>
-                        {% endfor %}
-                    </div>
-
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 col-md-6 col-sm-6 lost-your-password">
-                            <a href="/" onclick="return false;" class="lost-your-password">فراموشی گذرواژه؟</a>
-                        </div>
-                    </div>
-
-                    <button type="submit">ورود</button>
-                </form>
-
-                <!--<div class="important-text">
-                <p>حساب کاربری ندارید؟ <a href="{% url 'account:register' %}">ثبت نام</a></p>
-            </div>-->
-            </div>
-        </div>
-    </section>
-    <!-- End Login Area -->
-
-{% endblock main %}
-
-{% block other_script %}
-
-{% endblock other_script %}
+        <label style="float:right;" for="username">نام کاربری</label>
+        {{form.username}}
+        {% for err in form.username.errors %}
+            <p class="err">{{ err }}</p>
+        {% endfor %}
+        <label style="float:right;" for="password">رمز عبور</label>
+        {{form.password}}
+        {% for err in form.password.errors %}
+            <p class="err">{{ err }}</p>
+        {% endfor %}
+        <button type="submit">ورود</button>
+        {% if er_message %}<p class="err">{{ er_message }}</p>{% endif %}
+    </form>
+</body>
+</body>
+</html>
