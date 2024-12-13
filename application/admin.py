@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from application.Entities.order_model import Order, OrderSpeaker
 from application.admins.order_admin import OrderAdmin
+from application.admins.order_speaker_admin import OrderSpeakerAdmin
 
 from application.Entities.channel_message_model import ChannelMessage, ChatUser, FromUser
 from application.admins.message_admin import ChannelMessageAdmin, ChatUserAdmin, FromUserAdmin
@@ -15,8 +16,4 @@ admin.site.register(ChannelMessage, ChannelMessageAdmin)
 admin.site.register(ChatUser, ChatUserAdmin)
 admin.site.register(FromUser, FromUserAdmin)
 admin.site.register(Speaker, SpeakerAdmin)
-
-
-class OrderSpeakerAdmin(admin.ModelAdmin):
-    readonly_fields = ["date"]
 admin.site.register(OrderSpeaker, OrderSpeakerAdmin)

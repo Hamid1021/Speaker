@@ -9,7 +9,10 @@
 </head>
 <body dir="rtl">
     <div class="d-flex" style="height: 30rem;">
-        <h3 class="alert alert-danger d-block ml-auto mr-auto mt-auto p-5 text-center" style="min-width: 100%;">ارسال پیام ها با خطا مواجه شد</h3>
+        <h3 class="alert alert-danger d-block ml-auto mr-auto mt-auto p-5 text-center" style="min-width: 100%;">
+            ارسال پیام ها با خطا مواجه شد
+            <a href="{% url 'application:assign' %}" class="d-block btn btn-secondary btn-lg mt-3">بازگشت</a>
+        </h3>
     </div>
 </body>
 </html>

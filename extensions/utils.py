@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+import jdatetime
 
 from extensions import jalali
 from django.utils import timezone
@@ -32,6 +33,7 @@ def send_message_by_template(*args, **kwargs):
         )
     channel_message, channel_status = send_message_to_channel("sendMessage", kwargs.get("chatID"), kwargs.get("topic"), file)
     kwargs.get("obj").related_message = channel_message
+    kwargs.get("obj").is_message_send = True
     kwargs.get("obj").save()
 
 
@@ -164,6 +166,23 @@ def jalali_get_day(time):
     output = f"{time_to_tuple[2]}"
 
     return persian_numbers_converter(output)
+
+
+def jalali_get_day_title(dt):
+    day_map = {
+        "Saturday": "شنبه",
+        "Sunday": "یکشنبه",
+        "Monday": "دوشنبه",
+        "Tuesday": "سه‌شنبه",
+        "Wednesday": "چهارشنبه",
+        "Thursday": "پنجشنبه",
+        "Friday": "جمعه",
+    }
+    jalali_date = jdatetime.datetime.fromgregorian(datetime=dt)
+
+    jalali_day_name = jalali_date.strftime('%A')
+
+    return day_map[jalali_day_name]
 
 
 def jalali_get_month(time):

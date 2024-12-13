@@ -5,9 +5,9 @@ from django.http import HttpRequest
 
 
 # "phone", "date", "jdate", "time", "num_attendees", "gender_attendees", "education_min_attendees",
-# "education_max_attendees", "city", "topic", "status", "related_message", "is_assign", 
+# "education_max_attendees", "city", "topic", "status", "related_message", "is_assign", "is_selected"
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ["topic", "phone", "jdate", "time", "num_attendees", "gender_attendees", "city", "status", "is_assign"]
+    list_display = ["topic", "phone", "jdate", "time", "num_attendees", "gender_attendees", "city", "status", "is_assign", "is_selected"]
     search_fields = [
         "phone", "date", "time", "num_attendees", "gender_attendees",
         "education_min_attendees", "education_max_attendees", "city", "topic",
@@ -19,7 +19,7 @@ class OrderAdmin(admin.ModelAdmin):
         "phone", "date", "time", "num_attendees", "gender_attendees", "education_min_attendees",
         "education_max_attendees", "city", "topic", "related_message"
     ]
-    list_editable = ["status", "is_assign"]
+    # list_editable = ["status", "is_assign"]
 
     # def save_model(self, request: HttpRequest, obj, form: ModelForm, change: bool) -> None:
     #     if change:

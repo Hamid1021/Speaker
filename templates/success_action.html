@@ -9,7 +9,10 @@
 </head>
 <body dir="rtl">
     <div class="d-flex" style="height: 30rem;">
-        <h3 class="alert alert-success d-block ml-auto mr-auto mt-auto p-5 text-center" style="min-width: 100%;">سفارش با موفقیت ذخیره شد</h3>
+        <h3 class="alert alert-success d-block ml-auto mr-auto mt-auto p-5 text-center" style="min-width: 100%;">
+            سفارش با موفقیت ذخیره شد
+            <a href="{% url 'application:index' %}" class="d-block btn btn-secondary btn-lg mt-3">ثبت سفارش مجدد</a>
+        </h3>
     </div>
 </body>
 </html>

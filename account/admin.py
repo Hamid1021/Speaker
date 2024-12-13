@@ -8,19 +8,26 @@ from account.models import USER, Ticket, AnswerTicket
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from ckeditor.widgets import CKEditorWidget
+from django_ckeditor_5.widgets import CKEditor5Widget
 from django import forms
 
 from PIL import Image
 
 class UserAdminForm(forms.ModelForm):
-    bio = forms.CharField(
-        label="زندگی نامه", widget=CKEditorWidget(), required=False
-    )
+      """Form for comments to the article."""
 
-    class Meta:
-        model = USER
-        fields = '__all__'
+      def __init__(self, *args, **kwargs):
+          super().__init__(*args, **kwargs)
+        #   self.fields["text"].required = False
+
+      class Meta:
+          model = USER
+          fields = '__all__'
+          widgets = {
+              "bio": CKEditor5Widget(
+                  attrs={"class": "django_ckeditor_5"}, config_name="extends"
+              )
+          }
 
 
 class USERAdmin(UserAdmin):

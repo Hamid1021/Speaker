@@ -16,7 +16,6 @@ class Speaker(models.Model):
     gender_attendees = models.CharField("جنسیت", null=False, blank=False, default="m", max_length=1, choices=gender_attendees_choices)
     register_time = models.DateTimeField("زمان ثبت نام", null=True, blank=True, auto_now_add=True)
     total_number_of_lectures = models.IntegerField("تعداد کل روضه های انجام شده", null=True, blank=True, default=0)
-    today_number_of_lectures = models.IntegerField('روضه های انجام شده امروز', null=True, blank=True, default=0)
     status = models.BooleanField("وضعیت", null=False, blank=False, default=True)
     is_deleted = models.BooleanField("حذف شده؟", null=False, blank=False, default=False)
 

@@ -6,39 +6,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اتصال هوشمند سفارشات به سخنران‌ها</title>
     <link rel="stylesheet" href="{% static 'custom/css/bootstrap.min.css' %}">
-    
 </head>
 <body>
     <div class="container">
         <h1 class="alert alert-info m-5 text-center">اتصال هوشمند سفارشات به سخنران‌ها</h1>
-        <a href="{% url 'application:reset_today' %}" class="btn btn-danger float-right mb-3 mr-1">باز نشانی سهمیه روزانه سخنران ها</a>
         <a href="{% url 'application:do_assign' %}" class="btn btn-info float-right mb-3 mr-1">اتصال هوشمند سفارشات به سخنران‌ها</a>
         <a href="{% url 'application:sent_to_channel' %}" class="btn btn-success float-right mb-3 mr-1">ارسال به گروه ایتا</a>
+        <a href="{% url 'application:list_assign' %}" target="_blank" class="btn btn-outline-dark float-right mb-3 mr-1">لیست سخنرانی‌های ارسال شده در گروه</a>
+        <a style="font-size: xx-large;" id="start_time" class="lead ml-2 text-success"></a>
         
         <table dir="rtl" class="table table-active table-bordered table-dark table-striped text-center">
             <thead>
                 <tr>
                     <th>شماره همراه</th>
+                    <th>روز</th>
                     <th>تاریخ</th>
                     <th>زمان</th>
                     <th>تعداد افراد جلسه</th>
                     <th>روضه</th>
                     <th>سخنران</th>
+                    <th>امکانات</th>
                 </tr>
             </thead>
             <tbody id="ordersTable">
                 {% for object in object_list %}
                 <tr>
                     <td>{{ object.order.phone }}</td>
+                    <td>{{ object.order.daytitle }}</td>
                     <td>{{ object.order.jdate }}</td>
                     <td>{{ object.order.time }}</td>
                     <td>{{ object.order.num_attendees }}</td>
                     <td>{{ object.order.topic }}</td>
                     <td>{{ object.speaker.get_fullname }}</td>
+                    <td><a href="{% url 'application:edit_assign' object.id %}" class="btn btn-warning">ویرایش سخنران</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <script>
+        let serverTime = new Date('{{ start_time }}');
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        function updateServerTime() {
+            serverTime.setSeconds(serverTime.getSeconds() + 1);
+            document.getElementById('start_time').innerText = formatDate(serverTime);
+        }
+
+        setInterval(updateServerTime, 1000);
+    </script>
 </body>
 </html>

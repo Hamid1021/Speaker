@@ -1,7 +1,7 @@
 from typing import Iterable
 from django.db import models
 from application.Entities.channel_message_model import ChannelMessage
-from extensions.utils import jalali_converter_date
+from extensions.utils import jalali_converter_date, jalali_get_day_title, jalali_converter
 from application.Entities.Speaker_model import Speaker
 from django.utils import timezone
 
@@ -15,7 +15,30 @@ class OrderManage(models.Manager):
             raise Exception
         except Exception as e:
             return obj, False
+    
+    def get_all_not_selected(self):
+        return self.get_queryset().filter(is_selected=False)
+    
+    def get_all_selected(self):
+        return self.get_queryset().filter(is_selected=True)
 
+    def make_as_selected(self, order_pk):
+        try:
+            obj = self.get_queryset().get(pk=order_pk)
+            obj.is_selected = True
+            obj.save()
+            return True
+        except:
+            return False
+        
+    def make_as_not_selected(self, order_pk):
+        try:
+            obj = self.get_queryset().get(pk=order_pk)
+            obj.is_selected = False
+            obj.save()
+            return True
+        except:
+            return False
 
 class Order(models.Model):
     status_choice = (
@@ -33,28 +56,38 @@ class Order(models.Model):
     status = models.CharField("وضعیت", null=False, blank=False, default="uc", choices=status_choice, max_length=2)
     related_message = models.ForeignKey('ChannelMessage', on_delete=models.DO_NOTHING, null=True, verbose_name="پیام مرتبط")
     is_assign = models.BooleanField("مرتبط شده؟", null=False, blank=False, default=False)
-
+    is_message_send = models.BooleanField("پیام ارسال شده؟", null=False, blank=False, default=False)
+    is_selected = models.BooleanField("انتخاب شده", null=False, blank=False, default=False)
+    
     def __str__(self):
-        return f"{self.topic} - {self.phone} - {self.date} - {self.time}"
+        return f"{self.topic} - {jalali_converter_date(self.date)} - {self.time}"
 
     def jdate(self):
         return jalali_converter_date(self.date)
     jdate.short_description = "تاریخ"
 
+
+    def daytitle(self):
+        return jalali_get_day_title(self.date)
     class Meta:
         verbose_name = "سفارش"
         verbose_name_plural = "سفارشات ثبت شده"
-        ordering = ["status", '-date', "-time"]
+        ordering = ["-pk", 'date', "time"]
 
     objects = OrderManage()
 
 
 class OrderSpeaker(models.Model):
-    order = models.ForeignKey('Order', on_delete=models.DO_NOTHING, verbose_name="سفارش")
     speaker = models.ForeignKey('Speaker', on_delete=models.DO_NOTHING, verbose_name="سخنران")
-    date = models.DateTimeField("زمان ثبت", default=timezone.now(), null=True, blank=True)
+    order = models.ManyToManyField('Order', verbose_name="سفارش", related_name="order_set", null=True, blank=True)
+    date = models.DateTimeField("زمان ثبت", default=timezone.now, null=True, blank=True)
     related_message = models.ForeignKey('ChannelMessage', on_delete=models.DO_NOTHING, null=True, verbose_name="پیام مرتبط")
-    
+    is_message_send = models.BooleanField("پیام ارسال شده؟", null=False, blank=False, default=False)
+
+    def jdate(self):
+        return jalali_converter(self.date)
+    jdate.short_description = "زمان ثبت شمسی"
+
     def __str__(self):
         return f"{self.order} - {self.speaker} - {self.date}"
     class Meta:
