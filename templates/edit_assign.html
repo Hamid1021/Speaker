@@ -12,11 +12,13 @@
         <h1 class="alert alert-info text-center">ویرایش سفارش</h1>
         <form method="POST">
             {% csrf_token %}
-            <div class="col-6 form-group">
-                <label class="lead float-right" for="{{ form.speaker.id_for_label}}">{{ form.speaker.label}}</label>
-                {{ form.speaker|add_class:'form-control mb-4' }}
-                <button type="submit" class="btn btn-success btn-block btn-lg">ذخیره تغییرات</button>
-                <a href="{% url 'application:assign' %}" class="d-block btn btn-secondary btn-lg mt-3">بازگشت</a>
+            <div class="row justify-content-center">
+                <div class="col-6 form-group">
+                    <label class="lead float-right" for="{{ form.speaker.id_for_label}}">{{ form.speaker.label}}</label>
+                    {{ form.speaker|add_class:'form-control mb-4' }}
+                    <button type="submit" class="btn btn-success btn-block btn-lg">ذخیره تغییرات</button>
+                    <a href="{% url 'application:assign' %}" class="d-block btn btn-secondary btn-lg mt-3">بازگشت</a>
+                </div>
             </div>
         </form>
     </div>

@@ -53,6 +53,7 @@
                     </div>
                     <div class="col-3">
                         <a href="{% url 'application:speaker_assigned_orders' form.instance.speaker.id %}" class="btn btn-info btn-block mt-3">لیست برنامه‌ها</a>
+                        <a href="{% url 'account:logout' %}" class="btn btn-info btn-block mt-3">خروج</a>
                     </div>
                 </div>
                 {% comment %} <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back();">بازگشت</button> {% endcomment %}

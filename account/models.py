@@ -108,7 +108,7 @@ class USER(AbstractUser):
         blank=True, default="None"
     )
     phone_number = models.CharField(
-        verbose_name="شماره همراه", max_length=11, null=True, blank=True, unique=True
+        verbose_name="شماره همراه", max_length=11, null=True, blank=True
     )
     bio = CKEditor5Field(
         verbose_name="درباره من", max_length=300, null=True, blank=True,

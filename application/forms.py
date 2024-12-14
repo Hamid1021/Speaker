@@ -1,6 +1,7 @@
 from django import forms
 from application.Entities.order_model import SelectOrderSpeaker, Order
 from application.Entities.Speaker_model import Speaker
+from application.Entities.order_model import AssignOrderSpeaker
 
 
 class SelectOrderSpeakerForm(forms.ModelForm):
@@ -17,3 +18,9 @@ class SelectOrderSpeakerForm(forms.ModelForm):
             get_speaker = Speaker.objects.filter(user=user).first()
             if get_speaker:
                 self.instance.speaker = get_speaker
+
+
+class OrderSpeakerForm(forms.ModelForm):
+    class Meta:
+        model = AssignOrderSpeaker
+        fields = ['speaker']

@@ -56,37 +56,44 @@ class SingUpForm(forms.Form):
         max_length=200,
         label="نام کاربری",
         label_suffix="",
+        required=True,
         widget=forms.TextInput(
             attrs={
                 "name": "username",
                 "id": "username",
                 "placeholder": "نام کاربری",
                 "class": "form-control",
+                "oninput":"validateInput(event)", 
+                "onkeypress":"validateInput(event)", 
             }
         ))
-    # first_name = forms.CharField(
-    #     max_length=200,
-    #     label="",
-    #     widget=forms.TextInput(
-    #         attrs={"class": "input--style-4", "id": "first_name"}
-    #     ))
-    # last_name = forms.CharField(
-    #     max_length=200,
-    #     label="",
-    #     widget=forms.TextInput(
-    #         attrs={"class": "input--style-4", "id": "last_name"}
-    #     ))
-    # email = forms.CharField(
-    #     max_length=300,
-    #     label="",
-    #     widget=forms.EmailInput(
-    #         attrs={"name": "email", "class": "input--style-4",
-    #                "id": "email"}
-    #     ))
+    first_name = forms.CharField(
+        max_length=200,
+        label="",
+        required=True,
+        widget=forms.TextInput(
+            attrs={"class": "input--style-4", "id": "first_name", "placeholder":"نام"}
+        ))
+    last_name = forms.CharField(
+        max_length=200,
+        label="",
+        required=True,
+        widget=forms.TextInput(
+            attrs={"class": "input--style-4", "id": "last_name", "placeholder":"نام خانوادگی"}
+        ))
+    email = forms.CharField(
+        max_length=300,
+        label="",
+        required=False,
+        widget=forms.EmailInput(
+            attrs={"name": "email", "class": "input--style-4",
+                   "id": "email", "placeholder":"test@test.com"}
+        ))
     password = forms.CharField(
         max_length=100,
         label="رمز عبور",
         label_suffix="",
+        required=True,
         widget=forms.PasswordInput(
             attrs={
                 "name": "password",
@@ -99,6 +106,7 @@ class SingUpForm(forms.Form):
         max_length=100,
         label="تکرار رمز عبور",
         label_suffix="",
+        required=True,
         widget=forms.PasswordInput(
             attrs={
                 "name": "password",
@@ -114,14 +122,26 @@ class SingUpForm(forms.Form):
     #     widget=forms.TextInput(
     #         attrs={"type": "text", "class": "input--style-4", "id": "familier_code"}
     #     ))
-    # phone_number = forms.CharField(
-    #     max_length=11,
-    #     label="",
-    #     widget=forms.TextInput(attrs={
-    #         "type": "tel", "pattern": "^(\+989)+\d{9}$|^(09)+\d{9}$",
-    #         "class": "input--style-4", "id": "phone"}
-    #     ))
-
+    phone_number = forms.CharField(
+        max_length=11,
+        label="",
+        required=False,
+        widget=forms.TextInput(attrs={
+            "type": "tel", "pattern": "^(\+989)+\d{9}$|^(09)+\d{9}$",
+            "class": "input--style-4", "id": "phone", "placeholder":"09123456789"}
+        ))
+    age = forms.IntegerField(
+        label="سن",
+        label_suffix="",
+        required=True,
+        widget=forms.NumberInput(
+            attrs={"class": "input--style-4", "id": "age", "min":0, "value":0}
+        ))
+    def clean_age(self):
+        age = self.cleaned_data.get("age")
+        if age < 0:
+            raise forms.ValidationError("سن نمی‌تواند کمتر از 0 باشد.")
+        return age
     # def clean_familier(self):
     #     familier_code = self.cleaned_data.get("familier")
     #     if not familier_code:

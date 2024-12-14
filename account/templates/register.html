@@ -52,8 +52,8 @@ body{
     bottom: -80px;
 }
 form{
-    height: 520px;
-    width: 400px;
+    height: 800px;
+    width: 450px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;
     transform: translate(-50%,-50%);
@@ -81,7 +81,7 @@ form h3{
 
 label{
     display: block;
-    margin-top: 30px;
+    margin-top: 5px;
     font-size: 16px;
     font-weight: 500;
 }
@@ -91,16 +91,20 @@ input{
     width: 100%;
     background-color: rgba(255,255,255,0.07);
     border-radius: 3px;
+    direction: rtl;
     padding: 0 10px;
     margin-top: 8px;
     font-size: 14px;
     font-weight: 300;
 }
 ::placeholder{
-    color: #e5e5e5;
+    float: right;
+    color: #7f7f7f;
+    font-weight: bold;
+    font-size: 20px;
 }
 button{
-    margin-top: 50px;
+    margin-top: 15px;
     width: 100%;
     background-color: #ffffff;
     color: #080710;
@@ -124,6 +128,12 @@ button:hover{
 }
 
     </style>
+    <script>
+        function validateInput(event) {
+            const inputField = event.target;
+            inputField.value = inputField.value.replace(/[^a-zA-Z0-9]/g, '');
+        }
+    </script>
 </head>
 <body>
     <div class="background">
@@ -133,10 +143,34 @@ button:hover{
     <form method="post">
         {% csrf_token %}
         <h3>وارد شوید</h3>
-
-        <label style="float:right;" for="username">نام کاربری</label>
+        <label style="float:right;" for="{{form.username.id_for_label}}">نام کاربری</label>
         {{form.username}}
         {% for err in form.username.errors %}
+            <p class="err">{{ err }}</p>
+        {% endfor %}
+        <label style="float:right;" for="{{form.first_name.id_for_label}}">نام</label>
+        {{form.first_name}}
+        {% for err in form.first_name.errors %}
+            <p class="err">{{ err }}</p>
+        {% endfor %}
+        <label style="float:right;" for="{{form.last_name.id_for_label}}">نام خانوادگی</label>
+        {{form.last_name}}
+        {% for err in form.last_name.errors %}
+            <p class="err">{{ err }}</p>
+        {% endfor %}
+        <label style="float:right;" for="{{form.age.id_for_label}}">سن</label>
+        {{form.age}}
+        {% for err in form.age.errors %}
+            <p class="err">{{ err }}</p>
+        {% endfor %}
+        <label style="float:right;" for="{{form.email.id_for_label}}">آدرس ایمیل</label>
+        {{form.email}}
+        {% for err in form.email.errors %}
+            <p class="err">{{ err }}</p>
+        {% endfor %}
+        <label style="float:right;" for="{{form.phone_number.id_for_label}}">شماره همراه</label>
+        {{form.phone_number}}
+        {% for err in form.phone_number.errors %}
             <p class="err">{{ err }}</p>
         {% endfor %}
         <label style="float:right;" for="password">رمز عبور</label>

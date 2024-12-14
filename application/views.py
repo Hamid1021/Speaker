@@ -4,7 +4,7 @@ from application.Entities.order_model import Order, SelectOrderSpeaker, AssignOr
 from extensions.utils import gregorian_converter_date, send_message_by_template, jalali_converter_date
 from django.utils import timezone
 from application.Entities.Speaker_model import Speaker
-from application.forms import SelectOrderSpeakerForm
+from application.forms import SelectOrderSpeakerForm, OrderSpeakerForm
 
 def index(request):
     status = None
@@ -147,6 +147,7 @@ def edit_assign(request, pk):
     else:
         form = OrderSpeakerForm(instance=order)
     return render(request, 'edit_assign.html', {'form': form})
+
 
 
 def list_assign(request):
