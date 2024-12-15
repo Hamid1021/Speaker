@@ -19,7 +19,7 @@ class Speaker(models.Model):
     education_attendees = models.CharField("تحصیلات سخنران", null=True, blank=True, default="نا مشخص", max_length=255)
     register_time = models.DateTimeField("زمان ثبت نام", null=True, blank=True, auto_now_add=True)
     total_number_of_lectures = models.IntegerField("تعداد کل روضه های انجام شده", null=True, blank=True, default=0)
-    status = models.BooleanField("وضعیت فعالیت", null=False, blank=False, default=True)
+    status = models.BooleanField("فعال", null=False, blank=False, default=True)
     is_deleted = models.BooleanField("حذف شده؟", null=False, blank=False, default=False, editable=False)
 
     def jregister_time(self):
