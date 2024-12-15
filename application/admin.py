@@ -12,7 +12,7 @@ from application.admins.speaker_admin import SpeakerAdmin
 
 
 admin.site.register(Order, OrderAdmin)
-admin.site.register(ChannelMessage, ChannelMessageAdmin)
+# admin.site.register(ChannelMessage, ChannelMessageAdmin)
 # admin.site.register(ChatUser, ChatUserAdmin)
 # admin.site.register(FromUser, FromUserAdmin)
 admin.site.register(Speaker, SpeakerAdmin)
