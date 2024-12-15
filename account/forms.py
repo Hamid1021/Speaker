@@ -74,6 +74,20 @@ class SingUpForm(forms.Form):
         widget=forms.TextInput(
             attrs={"class": "input--style-4", "id": "first_name", "placeholder":"نام"}
         ))
+    education = forms.CharField(
+        max_length=300,
+        label="",
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "input--style-4", "placeholder":"میزان تحصیلات"}
+        ))
+    address = forms.CharField(
+        max_length=700,
+        label="",
+        required=False,
+        widget=forms.Textarea(
+            attrs={"class": "input--style-4", "placeholder":"آدررس"}
+        ))
     last_name = forms.CharField(
         max_length=200,
         label="",

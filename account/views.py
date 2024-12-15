@@ -42,6 +42,8 @@ def register_user(request):
             password = form.cleaned_data.get("password")
             phone = form.cleaned_data.get("phone_number")
             age = form.cleaned_data.get("age")
+            education = form.cleaned_data.get("education")
+            address = form.cleaned_data.get("address")
             try:
                 user = USER.objects.create_user(
                     username=username, password=password, 
@@ -59,7 +61,9 @@ def register_user(request):
                     education_attendees="نا مشخص",
                     total_number_of_lectures=0,
                     status=True,
-                    is_deleted=False
+                    is_deleted=False,
+                    education_attendees=education,
+                    address=address,
                 )
 
                 # بررسی وجود گروه سخنرانان و افزودن کاربر به گروه

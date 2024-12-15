@@ -158,6 +158,11 @@ button:hover{
         {% for err in form.last_name.errors %}
             <p class="err">{{ err }}</p>
         {% endfor %}
+        <label style="float:right;" for="{{form.education.id_for_label}}">میزان تحصیلات</label>
+        {{form.education}}
+        {% for err in form.education.errors %}
+            <p class="err">{{ err }}</p>
+        {% endfor %}
         <label style="float:right;" for="{{form.age.id_for_label}}">سن</label>
         {{form.age}}
         {% for err in form.age.errors %}
@@ -171,6 +176,11 @@ button:hover{
         <label style="float:right;" for="{{form.phone_number.id_for_label}}">شماره همراه</label>
         {{form.phone_number}}
         {% for err in form.phone_number.errors %}
+            <p class="err">{{ err }}</p>
+        {% endfor %}
+        <label style="float:right;" for="{{form.address.id_for_label}}">آدرس</label>
+        {{form.address}}
+        {% for err in form.address.errors %}
             <p class="err">{{ err }}</p>
         {% endfor %}
         <label style="float:right;" for="password">رمز عبور</label>
