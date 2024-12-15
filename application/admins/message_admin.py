@@ -23,7 +23,8 @@ class ChannelMessageAdmin(admin.ModelAdmin):
     ]
 
     def get_short_decs(self, obj):
-        return f"{obj.text[:70]}" + "...."
+        return f"{obj.text[:40]}" + "...."
+    get_short_decs.short_description = "بخشی از متن پیام"
 
     def get_unix_time(self, obj):
         return convert_unix_to_jalali(float(obj.date))
