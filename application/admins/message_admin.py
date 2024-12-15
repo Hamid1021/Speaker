@@ -9,7 +9,7 @@ from application.utils import convert_unix_to_jalali
 # "message_id", "date", "text", "status", "from_user", "chat_user", 
 class ChannelMessageAdmin(admin.ModelAdmin):
     list_display = [
-        "message_id", "get_unix_time", "status", "get_from_user", "get_from_chat", 
+        "message_id", "get_short_decs", "get_unix_time", "status", "get_from_user", "get_from_chat", 
     ]
     search_fields = [
         "message_id", "text", "from_user__username", "chat_user__username", 
@@ -21,6 +21,9 @@ class ChannelMessageAdmin(admin.ModelAdmin):
     readonly_fields = [
         "message_id", "date", "text", "status", "from_user", "chat_user", 
     ]
+
+    def get_short_decs(self, obj):
+        return f"{obj.text[:70]}" + "...."
 
     def get_unix_time(self, obj):
         return convert_unix_to_jalali(float(obj.date))
