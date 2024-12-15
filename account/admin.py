@@ -165,7 +165,7 @@ class TicketAdmin(admin.ModelAdmin):
     is_answer.boolean = True
 
 
-admin.site.register(Ticket, TicketAdmin)
+# admin.site.register(Ticket, TicketAdmin)
 
 
 # "message","status", "jcreated", "created",
@@ -179,4 +179,4 @@ class AnswerTicketAdmin(admin.ModelAdmin):
     actions = [make_True_Status, make_False_Status]
 
 
-admin.site.register(AnswerTicket, AnswerTicketAdmin)
+# admin.site.register(AnswerTicket, AnswerTicketAdmin)
