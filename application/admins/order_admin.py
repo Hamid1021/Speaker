@@ -4,9 +4,19 @@ from django.http import HttpRequest
 # from application.send_message import edit_message_from_channel
 
 
+@admin.action(description="تغییر موارد به مرتبط نشده", permissions=["change"])
+def make_as_not_assign(modeladmin, request, queryset):
+    queryset.update(is_assign=False)
+
+
+@admin.action(description="تغییر موارد به مرتبط شده", permissions=["change"])
+def make_as_assign(modeladmin, request, queryset):
+    queryset.update(is_assign=True)
+
 # "phone", "date", "jdate", "time", "num_attendees", "gender_attendees", "education_min_attendees",
 # "education_max_attendees", "city", "topic", "status", "related_message", "is_assign", "is_selected"
 class OrderAdmin(admin.ModelAdmin):
+    actions = [make_as_not_assign, make_as_assign]
     list_display = ["topic", "phone", "jdate", "time", "num_attendees", "city", "status", "is_assign",]
     search_fields = [
         "phone", "date", "time", "num_attendees",
