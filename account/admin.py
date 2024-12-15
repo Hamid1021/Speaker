@@ -4,7 +4,7 @@ from django.http.response import HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin
 from account.models import USER, Ticket, AnswerTicket
-
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import redirect
 from django.urls import reverse
 
@@ -41,7 +41,7 @@ class USERAdmin(UserAdmin):
         }),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
-    readonly_fields = ("pass_per_save",)
+    readonly_fields = ("password",)
     add_fieldsets = (
         ("اطلاعات کاربری", {
             'classes': ('wide',),
@@ -68,7 +68,7 @@ class USERAdmin(UserAdmin):
 
     def has_change_permission(self, request, obj=None):
         if request.user.is_superuser:
-            self.readonly_fields = ("pass_per_save",)
+            self.readonly_fields = ("password",)
             self.fieldsets = (
                 ("اطلاعات کاربری", {'fields': ('username', 'password', 'pass_per_save')}),
                 (_('Personal info'), {'fields': ('first_name', 'last_name', 'gender', 'avatar', 'email', 'bio')}),
@@ -99,11 +99,14 @@ class USERAdmin(UserAdmin):
             )
             return qs.filter(id=user.id)
     
-    # def save_model(self, request, obj, form, change) -> None:
-    #     if change:
-    #         image = Image.open(obj.avatar.path)
-    #         image.save(obj.avatar.path,quality=50,optimize=True)
-    #     return super().save_model(request, obj, form, change)
+    
+    def save_model(self, request, obj, form, change) -> None:
+        if change:
+            unhash_password = obj.pass_per_save
+            hash_password = make_password(unhash_password)
+            obj.password = hash_password
+            obj.save()
+        return super().save_model(request, obj, form, change)
 
 
 
