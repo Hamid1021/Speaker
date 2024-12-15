@@ -57,13 +57,11 @@ def register_user(request):
                     family=last_name,
                     phone=phone,
                     age=age,
-                    address="ثبت نشده",
-                    education_attendees="نا مشخص",
+                    address=address,
                     total_number_of_lectures=0,
                     status=True,
                     is_deleted=False,
                     education_attendees=education,
-                    address=address,
                 )
 
                 # بررسی وجود گروه سخنرانان و افزودن کاربر به گروه
