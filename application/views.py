@@ -112,13 +112,12 @@ def change_status(request, speaker_id, order_id):
         return redirect('application:select_order_by_speaker')
 
     order = Order.objects.get(id=order_id)
-    
-    if order.speaker_id == speaker_id:
-        if order.status == "uc":
-            order.status = "c"
-        else:
-            order.status = "uc"
-        order.save()
+
+    if order.status == "uc":
+        order.status = "c"
+    else:
+        order.status = "uc"
+    order.save()
 
     return redirect(reverse("application:speaker_assigned_orders", args=[speaker_id]))
 
