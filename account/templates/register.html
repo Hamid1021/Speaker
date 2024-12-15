@@ -52,7 +52,7 @@ body{
     bottom: -80px;
 }
 form{
-    height: 800px;
+    height: 1000px;
     width: 450px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;
@@ -85,7 +85,7 @@ label{
     font-size: 16px;
     font-weight: 500;
 }
-input{
+input, textarea{
     display: block;
     height: 50px;
     width: 100%;
@@ -98,6 +98,12 @@ input{
     font-weight: 300;
 }
 ::placeholder{
+    float: right;
+    color: #7f7f7f;
+    font-weight: bold;
+    font-size: 20px;
+}
+textarea::placeholder{
     float: right;
     color: #7f7f7f;
     font-weight: bold;
