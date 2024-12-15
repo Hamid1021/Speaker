@@ -5,6 +5,8 @@ from extensions.utils import gregorian_converter_date, send_message_by_template,
 from django.utils import timezone
 from application.Entities.Speaker_model import Speaker
 from application.forms import SelectOrderSpeakerForm, OrderSpeakerForm
+from datetime import timedelta
+
 
 def index(request):
     status = None
@@ -74,6 +76,10 @@ def assign_orders_to_speakers():
             # بررسی اینکه سخنران درخواست داده است یا خیر
             has_requested = SelectOrderSpeaker.objects.filter(speaker=speaker, order=order).exists()
             
+            is_pass_a_half = AssignOrderSpeaker.objects.filter(
+                    speaker=speaker,
+                    date__year=today.year, date__month=today.month, date__day=today.day
+                ).first()
             if has_requested:
                 # بررسی تعداد سفارش‌های امروز سخنران
                 today_orders_count = AssignOrderSpeaker.objects.filter(
@@ -83,10 +89,22 @@ def assign_orders_to_speakers():
 
                 # اگر تعداد سفارش‌های امروز کمتر از 2 باشد، اختصاص سفارش به سخنران
                 if today_orders_count < 2:
-                    order.is_assign = True
-                    order.save()
-                    AssignOrderSpeaker.objects.create(order=order, speaker=speaker)
-                    break
+                    if is_pass_a_half:
+                        prev_order_time = is_pass_a_half.order.time
+                        current_order_time = order.time
+                        if current_order_time - prev_order_time >= timedelta(minutes=30):
+                            order.is_assign = True
+                            order.save()
+                            AssignOrderSpeaker.objects.create(order=order, speaker=speaker)
+                            break
+                    else:
+                        order.is_assign = True
+                        order.save()
+                        AssignOrderSpeaker.objects.create(order=order, speaker=speaker)
+                        break
+
+
+            
 
 
 def do_assign(request):
