@@ -5,7 +5,7 @@ from extensions.utils import gregorian_converter_date, send_message_by_template,
 from django.utils import timezone
 from application.Entities.Speaker_model import Speaker
 from application.forms import SelectOrderSpeakerForm, OrderSpeakerForm
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 
 def index(request):
@@ -90,8 +90,8 @@ def assign_orders_to_speakers():
                 # اگر تعداد سفارش‌های امروز کمتر از 2 باشد، اختصاص سفارش به سخنران
                 if today_orders_count < 2:
                     if is_pass_a_half:
-                        prev_order_time = is_pass_a_half.order.time
-                        current_order_time = order.time
+                        prev_order_time = datetime.combine(today, is_pass_a_half.order.time)
+                        current_order_time = datetime.combine(today, order.time)
                         if current_order_time - prev_order_time >= timedelta(minutes=30):
                             order.is_assign = True
                             order.save()
