@@ -14,7 +14,7 @@ def make_as_assign(modeladmin, request, queryset):
     queryset.update(is_assign=True)
 
 # "phone", "date", "jdate", "time", "num_attendees", "gender_attendees", "education_min_attendees",
-# "education_max_attendees", "city", "topic", "status", "related_message", "is_assign", "is_selected"
+# "education_max_attendees", "city", "topic", "status", "related_message", "is_assign", "is_message_send"
 class OrderAdmin(admin.ModelAdmin):
     actions = [make_as_not_assign, make_as_assign]
     list_display = ["topic", "phone", "jdate", "time", "num_attendees", "city", "status", "is_assign",]
@@ -28,7 +28,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = [
         "phone", "date", "time", "num_attendees", "education_min_attendees",
         "education_max_attendees", "city", "topic", "related_message",
-        "gender_attendees", "is_assign", "status","is_selected"
+        "gender_attendees", "is_assign", "status","is_message_send", 
     ]
     # list_editable = ["status", "is_assign"]
 
