@@ -22,7 +22,8 @@ def login_user(request):
                 login(request, user=user)
                 return redirect(reverse("application:select_order_by_speaker"))
             login(request, user=user)
-            return redirect(reverse("admin:index"))
+            # return redirect(reverse("admin:index"))
+            return redirect(reverse("application:assign"))
 
     context = {
         "form": form
