@@ -22,11 +22,11 @@ class AssignOrderSpeakerAdmin(admin.ModelAdmin):
 
     def get_order_date(self, obj):
         return jalali_converter_date(obj.order.date)
-    get_order_date.short_description = "تاریخ"
+    get_order_date.short_description = "تاریخ روضه"
 
     def get_order_time(self, obj):
         return obj.order.time
-    get_order_time.short_description = "زمان"
+    get_order_time.short_description = "ساعت روضه"
 
     def has_add_permission(self, request, obj=None):
         return False
