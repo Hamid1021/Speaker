@@ -6,6 +6,15 @@ class AssignOrderSpeakerAdmin(admin.ModelAdmin):
     list_display = ["speaker","date","jdate","is_message_send"]
     readonly_fields = ["date", "is_message_send"]
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
 
 
 # "order","speaker","date","is_message_send"
