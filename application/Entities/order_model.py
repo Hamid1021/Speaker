@@ -71,13 +71,13 @@ class SelectOrderSpeaker(models.Model):
 class AssignOrderSpeaker(models.Model):
     speaker = models.ForeignKey(Speaker, on_delete=models.DO_NOTHING, verbose_name="سخنران")
     order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, verbose_name="سفارش", null=True, blank=True)
-    date = models.DateTimeField("زمان ثبت میلادی", default=timezone.now, null=True, blank=True)
+    date = models.DateTimeField("زمان ثبت روضه (میلادی)", default=timezone.now, null=True, blank=True)
     related_message = models.ForeignKey(ChannelMessage, on_delete=models.DO_NOTHING, null=True, verbose_name="پیام مرتبط")
     is_message_send = models.BooleanField("پیام ارسال شده؟", null=False, blank=False, default=False)
 
     def jdate(self):
         return jalali_converter(self.date)
-    jdate.short_description = "زمان ثبت شمسی"
+    jdate.short_description = "زمان ثبت روضه (شمسی)"
 
     def __str__(self):
         return f"{self.order} - {self.speaker} - {self.date}"

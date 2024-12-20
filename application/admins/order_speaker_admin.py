@@ -19,6 +19,14 @@ class AssignOrderSpeakerAdmin(admin.ModelAdmin):
         return obj.order.city
     get_order_city.short_description = "شهر"
 
+    def get_order_date(self, obj):
+        return obj.order.date
+    get_order_date.short_description = "تاریخ"
+
+    def get_order_time(self, obj):
+        return obj.order.time
+    get_order_time.short_description = "زمان"
+
     def has_add_permission(self, request, obj=None):
         return False
 
