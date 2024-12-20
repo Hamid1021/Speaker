@@ -35,7 +35,7 @@ class Order(models.Model):
     topic = models.CharField("موضوع روضه", null=True, blank=True, default="", max_length=255)
     status = models.CharField("وضعیت انجام", null=False, blank=False, default="uc", choices=status_choice, max_length=2)
     related_message = models.ForeignKey(ChannelMessage, on_delete=models.DO_NOTHING, null=True, verbose_name="پیام مرتبط")
-    is_assign = models.BooleanField("مرتبط شده؟", null=False, blank=False, default=False)
+    is_assign = models.BooleanField("اختصاص داده شده؟", null=False, blank=False, default=False)
     is_message_send = models.BooleanField("پیام ارسال شده؟", null=False, blank=False, default=False)
     
     def __str__(self):
@@ -50,7 +50,7 @@ class Order(models.Model):
         return jalali_get_day_title(self.date)
     class Meta:
         verbose_name = "سفارش"
-        verbose_name_plural = "سفارشات ثبت شده"
+        verbose_name_plural = "لیست روضه های درخواستی"
         ordering = ["-pk", 'date', "time"]
 
     objects = OrderManage()
@@ -83,4 +83,4 @@ class AssignOrderSpeaker(models.Model):
         return f"{self.order} - {self.speaker} - {self.date}"
     class Meta:
         verbose_name = "سخنران_سفارش"
-        verbose_name_plural = "اختصاص سفارش به سخنران"
+        verbose_name_plural = "لیست روضه-سخنران"

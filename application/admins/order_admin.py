@@ -4,12 +4,12 @@ from django.http import HttpRequest
 # from application.send_message import edit_message_from_channel
 
 
-@admin.action(description="تغییر موارد به مرتبط نشده", permissions=["change"])
+@admin.action(description="تغییر موارد به اختصاص داده نشده", permissions=["change"])
 def make_as_not_assign(modeladmin, request, queryset):
     queryset.update(is_assign=False)
 
 
-@admin.action(description="تغییر موارد به مرتبط شده", permissions=["change"])
+@admin.action(description="تغییر موارد به اختصاص داده شده", permissions=["change"])
 def make_as_assign(modeladmin, request, queryset):
     queryset.update(is_assign=True)
 
@@ -27,7 +27,8 @@ class OrderAdmin(admin.ModelAdmin):
     ]
     readonly_fields = [
         "phone", "date", "time", "num_attendees", "education_min_attendees",
-        "education_max_attendees", "city", "topic", "related_message"
+        "education_max_attendees", "city", "topic", "related_message",
+        "gender_attendees", "is_assign", "is_selected", "status",
     ]
     # list_editable = ["status", "is_assign"]
 
