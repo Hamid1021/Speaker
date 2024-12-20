@@ -28,7 +28,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = [
         "phone", "date", "time", "num_attendees", "education_min_attendees",
         "education_max_attendees", "city", "topic", "related_message",
-        "gender_attendees", "is_assign", "status",
+        "gender_attendees", "is_assign", "status","is_selected"
     ]
     # list_editable = ["status", "is_assign"]
 

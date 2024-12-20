@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h-2z_0qp9p-e0aq#$uy7t1s_+*^c%$1%qjivui4$t#zx$#(^cb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
 if DEBUG:
     ALLOWED_HOSTS = ["*"]
@@ -39,29 +39,29 @@ if DEBUG:
         }
     }
     
-    STATIC_ROOT = BASE_DIR / 'static/'
-    MEDIA_ROOT = BASE_DIR / 'media/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
     ALLOWED_HOSTS = [
-        '91.207.205.38', 'https://server.ir', 'http://server.ir', 'server.ir',
-        'https://www.server.ir', 'http://www.server.ir', 'www.server.ir',
+        '62.3.41.209', 'https://server.ir', 'http://server.ir', 'server.ir', "https://62.3.41.209", "http://62.3.41.209"
+        'https://www.server.ir', 'http://www.server.ir', 'www.server.ir', "127.0.0.1"
     ]
     # Database
     # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': "",
-            'USER': "",
-            'PASSWORD': "",
-            'HOST': '127.0.0.1',  # Or an IP Address that your DB is hosted on
-            'PORT': '3306',
-            'OPTIONS': {
-                'sql_mode': 'STRICT_ALL_TABLES',
-                'charset': 'utf8mb4'
-            },
-        }
-    }
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.mysql',
+    #         'NAME': "",
+    #         'USER': "",
+    #         'PASSWORD': "",
+    #         'HOST': '127.0.0.1',  # Or an IP Address that your DB is hosted on
+    #         'PORT': '3306',
+    #         'OPTIONS': {
+    #             'sql_mode': 'STRICT_ALL_TABLES',
+    #             'charset': 'utf8mb4'
+    #         },
+    #     }
+    # }
     # DATABASES = {
     #     'default': {
     #         'ENGINE': 'django.db.backends.postgresql',
@@ -72,8 +72,16 @@ else:
     #         'PORT': '5432',
     #     }
     # }
-    STATIC_ROOT = "/home/cp39649/public_html/static"
-    MEDIA_ROOT = "/home/cp39649/public_html/media"
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CSRF_TRUSTED_ORIGINS = ['http://62.3.41.209:8000', 'https://62.3.41.209:8000', 'http://127.0.0.1:8000']
 
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
