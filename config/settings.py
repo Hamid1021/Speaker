@@ -209,14 +209,14 @@ INSTALLED_APPS = [
     'django_render_partial',
     'django_ckeditor_5',
     "extensions",
-    'django.contrib.sitemaps',
-    'django.contrib.sites',
+    # 'django.contrib.sitemaps',
+    # 'django.contrib.sites',
     'widget_tweaks',
     
     # Added Application
     "account.apps.AccountConfig",
     "application.apps.ApplicationConfig",
-    'map_xml.apps.MapXmlConfig',
+    # 'map_xml.apps.MapXmlConfig',
 ]
 
 MIDDLEWARE = [

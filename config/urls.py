@@ -20,7 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('account.urls', namespace="account")),
     path('', include('application.urls', namespace="application")),
-    path('', include('map_xml.urls', namespace="sitemap")),
+    # path('', include('map_xml.urls', namespace="sitemap")),
     # ckeditor
     path("ckeditor-up/", include('django_ckeditor_5.urls')),
     # path("upload/", custom_upload_function, name="custom_upload_file"),
