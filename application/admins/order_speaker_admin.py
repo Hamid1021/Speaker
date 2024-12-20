@@ -21,8 +21,7 @@ class AssignOrderSpeakerAdmin(admin.ModelAdmin):
     get_order_city.short_description = "شهر"
 
     def get_order_date(self, obj):
-        jalali_converter_date(obj.order.date)
-        return 
+        return jalali_converter_date(obj.order.date)
     get_order_date.short_description = "تاریخ"
 
     def get_order_time(self, obj):
