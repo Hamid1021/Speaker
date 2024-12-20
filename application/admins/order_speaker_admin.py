@@ -1,5 +1,6 @@
 from django.contrib import admin
 from application.Entities.Speaker_model import Speaker
+from extensions.utils import jalali_converter_date
 
 # "order","speaker","date","is_message_send"
 class AssignOrderSpeakerAdmin(admin.ModelAdmin):
@@ -20,7 +21,8 @@ class AssignOrderSpeakerAdmin(admin.ModelAdmin):
     get_order_city.short_description = "شهر"
 
     def get_order_date(self, obj):
-        return obj.order.jdate
+        jalali_converter_date(obj.order.date)
+        return 
     get_order_date.short_description = "تاریخ"
 
     def get_order_time(self, obj):
