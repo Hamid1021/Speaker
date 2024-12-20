@@ -3,7 +3,7 @@ from application.Entities.Speaker_model import Speaker
 
 # "order","speaker","date","is_message_send"
 class AssignOrderSpeakerAdmin(admin.ModelAdmin):
-    list_display = ["speaker", "get_order_topic", "get_order_city", "jdate","is_message_send"]
+    list_display = ["speaker", "get_order_topic", "get_order_city", "get_order_date", "get_order_time", "jdate","is_message_send"]
     readonly_fields = ["date", "is_message_send"]
     search_fields = [
         "speaker__name", "order__phone",
