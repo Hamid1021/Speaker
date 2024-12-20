@@ -36,6 +36,6 @@ class Speaker(models.Model):
 
     class Meta:
         verbose_name = "سخنران"
-        verbose_name_plural = "لیست سخنران ها"
+        verbose_name_plural = "سخنران ها"
         ordering = ["name", 'family', "age", "total_number_of_lectures"]
 

@@ -3,8 +3,21 @@ from application.Entities.Speaker_model import Speaker
 
 # "order","speaker","date","is_message_send"
 class AssignOrderSpeakerAdmin(admin.ModelAdmin):
-    list_display = ["speaker","date","jdate","is_message_send"]
+    list_display = ["speaker", "get_order_topic", "get_order_city", "jdate","is_message_send"]
     readonly_fields = ["date", "is_message_send"]
+    search_fields = [
+        "speaker__name", "order__phone",
+        "speaker__family", "order__topic",
+        "order__city",
+    ]
+
+    def get_order_topic(self, obj):
+        return obj.order.topic
+    get_order_topic.short_description = "موضوع روضه"
+
+    def get_order_city(self, obj):
+        return obj.order.city
+    get_order_city.short_description = "شهر"
 
     def has_add_permission(self, request, obj=None):
         return False

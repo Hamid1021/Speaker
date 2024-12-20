@@ -49,8 +49,8 @@ class Order(models.Model):
     def daytitle(self):
         return jalali_get_day_title(self.date)
     class Meta:
-        verbose_name = "سفارش"
-        verbose_name_plural = "لیست روضه های درخواستی"
+        verbose_name = "روضه"
+        verbose_name_plural = "روضه ها"
         ordering = ["-pk", 'date', "time"]
 
     objects = OrderManage()
@@ -71,7 +71,7 @@ class SelectOrderSpeaker(models.Model):
 class AssignOrderSpeaker(models.Model):
     speaker = models.ForeignKey(Speaker, on_delete=models.DO_NOTHING, verbose_name="سخنران")
     order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, verbose_name="سفارش", null=True, blank=True)
-    date = models.DateTimeField("زمان ثبت", default=timezone.now, null=True, blank=True)
+    date = models.DateTimeField("زمان ثبت میلادی", default=timezone.now, null=True, blank=True)
     related_message = models.ForeignKey(ChannelMessage, on_delete=models.DO_NOTHING, null=True, verbose_name="پیام مرتبط")
     is_message_send = models.BooleanField("پیام ارسال شده؟", null=False, blank=False, default=False)
 
@@ -82,5 +82,5 @@ class AssignOrderSpeaker(models.Model):
     def __str__(self):
         return f"{self.order} - {self.speaker} - {self.date}"
     class Meta:
-        verbose_name = "سخنران_سفارش"
-        verbose_name_plural = "لیست روضه-سخنران"
+        verbose_name = "روضه-سخنران"
+        verbose_name_plural = "روضه-سخنران"

@@ -18,3 +18,8 @@ admin.site.register(Order, OrderAdmin)
 admin.site.register(Speaker, SpeakerAdmin)
 # admin.site.register(SelectOrderSpeaker, SelectOrderSpeakerAdmin)
 admin.site.register(AssignOrderSpeaker, AssignOrderSpeakerAdmin)
+
+from django.contrib import admin
+from django.contrib.auth.models import Group
+
+admin.site.unregister(Group)
