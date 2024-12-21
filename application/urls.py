@@ -1,7 +1,7 @@
 from django.urls import path
 from application.views import (
     index, success_action, faill_action, assign, edit_assign, do_assign, sent_to_channel, list_assign,
-    select_order_by_speaker, success_select_order, speaker_assigned_orders, change_status
+    select_order_by_speaker, success_select_order, speaker_assigned_orders, change_status, reports
 )
 app_name = 'application'
 
@@ -18,4 +18,5 @@ urlpatterns = [
     path('success_select_order/', success_select_order, name='success_select_order'),
     path('assigned_orders/<int:speaker_id>/', speaker_assigned_orders, name='speaker_assigned_orders'),
     path('change_status/<int:speaker_id>/<int:order_id>/', change_status, name='change_status'),
+    path('reports/', reports, name='reports')
 ]

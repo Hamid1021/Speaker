@@ -5,6 +5,18 @@ from django.db.models import Q
 User = get_user_model()
 
 
+from django.contrib.auth.forms import PasswordChangeForm
+
+class SpeakerPasswordChangeForm(PasswordChangeForm):
+    old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ['old_password', 'new_password1', 'new_password2']
+
+
 class LoginForm(forms.Form):
     username = forms.CharField(
         max_length=200,

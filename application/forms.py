@@ -2,7 +2,7 @@ from django import forms
 from application.Entities.order_model import SelectOrderSpeaker, Order
 from application.Entities.Speaker_model import Speaker
 from application.Entities.order_model import AssignOrderSpeaker
-
+from account.models import USER
 
 class SelectOrderSpeakerForm(forms.ModelForm):
     class Meta:
@@ -24,3 +24,4 @@ class OrderSpeakerForm(forms.ModelForm):
     class Meta:
         model = AssignOrderSpeaker
         fields = ['speaker']
+

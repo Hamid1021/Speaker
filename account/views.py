@@ -6,7 +6,9 @@ from account.models import USER
 from application.Entities.Speaker_model import Speaker
 
 from account.forms import SingUpForm, LoginForm
-
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from .forms import SpeakerPasswordChangeForm
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -81,8 +83,21 @@ def register_user(request):
 
 
 
-
-
 def logout_admin(request):
     logout(request)
     return redirect(reverse("account:login"))
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = SpeakerPasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # این خط مهم است تا کاربر پس از تغییر رمزعبور لاگین بماند.
+            messages.success(request, 'رمز عبور با موفقیت تغییر یافت.')
+            return redirect('application:select_order_by_speaker')  # تغییر مسیر به صفحه پروفایل پس از تغییر رمزعبور
+        else:
+            messages.error(request, 'لطفاً خطاهای فرم را تصحیح کنید.')
+    else:
+        form = SpeakerPasswordChangeForm(request.user)
+    return render(request, 'change_password.html', {'form': form})

@@ -1,7 +1,9 @@
+<!-- templates/application/select.html -->
 <!DOCTYPE html>
 <html lang="fa">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>انتخاب سفارش</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
@@ -49,16 +51,16 @@
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-3">
-                        <button type="submit" class="btn btn-success btn-block mt-3">ذخیره</button>
+                        <button type="submit" class="btn btn-success btn-block mt-3">ذخیره انتخاب شده ها</button>
                     </div>
                     <div class="col-3">
-                        <a href="{% url 'application:speaker_assigned_orders' form.instance.speaker.id %}" class="btn btn-info btn-block mt-3">لیست برنامه‌ها</a>
-                        <a href="{% url 'account:logout' %}" class="btn btn-info btn-block mt-3">خروج</a>
+                        <a href="{% url 'application:speaker_assigned_orders' form.instance.speaker.id %}" class="btn btn-outline-info btn-block mt-3">لیست برنامه‌ها</a>
+                        <a href="{% url 'account:change_password' %}" class="btn btn-warning btn-block mt-3">تغییر رمز عبور</a> <!-- لینک تغییر رمز عبور -->
+                        <a href="{% url 'account:logout' %}" class="btn btn-danger btn-block mt-3">خروج</a>
                     </div>
                 </div>
-                {% comment %} <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back();">بازگشت</button> {% endcomment %}
             </form>
-            {% else %}
+        {% else %}
             <div class="alert alert-warning text-center mt-5" role="alert">
                 شما مجاز به دیدن این صفحه نیستید
             </div>

@@ -6,6 +6,9 @@ from django.utils import timezone
 from application.Entities.Speaker_model import Speaker
 from application.forms import SelectOrderSpeakerForm, OrderSpeakerForm
 from datetime import timedelta, datetime
+from django.db.models import Count, Sum, Min
+from django.db.models.functions import TruncDay, TruncMonth, TruncYear
+import jdatetime
 
 
 def index(request):
@@ -104,9 +107,6 @@ def assign_orders_to_speakers():
                         break
 
 
-            
-
-
 def do_assign(request):
     assign_orders_to_speakers()
     return redirect(reverse("application:assign"))
@@ -164,7 +164,6 @@ def edit_assign(request, pk):
     else:
         form = OrderSpeakerForm(instance=order)
     return render(request, 'edit_assign.html', {'form': form})
-
 
 
 def list_assign(request):
@@ -235,3 +234,100 @@ def select_order_by_speaker(request):
         context["selected_orders"] = selected_orders
     
     return render(request, 'select_order_by_speaker.html', context)
+
+
+
+
+def get_jalali_weeks():
+    # دریافت تاریخ اولین سفارش
+    first_order_date = AssignOrderSpeaker.objects.aggregate(first_date=Min('date'))['first_date']
+    if not first_order_date:
+        return []
+
+    start_date = jdatetime.date.fromgregorian(date=first_order_date.date())
+    today = jdatetime.date.today()
+    weeks = []
+    while start_date <= today:
+        weeks.append(start_date)
+        start_date += jdatetime.timedelta(days=7)
+    return weeks
+
+def get_jalali_weekday_counts(start_of_week):
+    end_of_week = start_of_week + jdatetime.timedelta(days=6)
+    
+    # تبدیل به تاریخ میلادی برای استفاده در فیلتر دیتابیس
+    start_of_week_gregorian = start_of_week.togregorian()
+    end_of_week_gregorian = end_of_week.togregorian()
+    
+    # فیلتر سفارشات بر اساس تاریخ در جدول AssignOrderSpeaker
+    assigned_orders = AssignOrderSpeaker.objects.filter(date__range=[start_of_week_gregorian, end_of_week_gregorian])
+    weekdays = {
+        "شنبه": 0,
+        "یکشنبه": 1,
+        "دوشنبه": 2,
+        "سه‌شنبه": 3,
+        "چهارشنبه": 4,
+        "پنجشنبه": 5,
+        "جمعه": 6,
+    }
+
+    weekday_counts = {day: 0 for day in weekdays.keys()}
+    
+    for assigned_order in assigned_orders:
+        jalali_date = jdatetime.date.fromgregorian(date=assigned_order.date)
+        weekday_name = jalali_date.strftime('%A')
+        weekday_name_fa = {
+            'Saturday': 'شنبه',
+            'Sunday': 'یکشنبه',
+            'Monday': 'دوشنبه',
+            'Tuesday': 'سه‌شنبه',
+            'Wednesday': 'چهارشنبه',
+            'Thursday': 'پنجشنبه',
+            'Friday': 'جمعه'
+        }.get(weekday_name, '')
+        
+        if weekday_name_fa in weekday_counts:
+            weekday_counts[weekday_name_fa] += 1
+
+    return weekday_counts
+
+def reports(request):
+    # دریافت پارامتر هفته از درخواست
+    week_param = request.GET.get('week')
+    weeks = get_jalali_weeks()
+    if week_param:
+        try:
+            start_of_week = jdatetime.datetime.strptime(week_param, '%Y-%m-%d').date()
+        except ValueError:
+            start_of_week = jdatetime.date.today() - jdatetime.timedelta(days=jdatetime.date.today().weekday())
+    else:
+        today = jdatetime.date.today()
+        start_of_week = today - jdatetime.timedelta(days=today.weekday())
+
+    # تعداد کل افراد شرکت کننده
+    total_attendees = Order.objects.aggregate(total_attendees=Sum('num_attendees'))
+
+    # لیست همه شهرها و تعداد سفارشات هر شهر
+    city_stats = Order.objects.values('city').annotate(count=Count('id')).order_by('-count')
+
+    # لیست حداقل و حداکثر مدارک تحصیلی و تعداد سفارشات هر کدام
+    education_min_stats = Order.objects.values('education_min_attendees').annotate(count=Count('id')).order_by('-count')
+    education_max_stats = Order.objects.values('education_max_attendees').annotate(count=Count('id')).order_by('-count')
+
+    # جنسیت افراد شرکت کننده و تعداد سفارشات
+    gender_stats = Order.objects.values('gender_attendees').annotate(count=Count('id')).order_by('-count')
+
+    # تعداد سفارشات در روزهای هفته انتخابی
+    weekday_counts = get_jalali_weekday_counts(start_of_week)
+
+    context = {
+        'total_attendees': total_attendees['total_attendees'],
+        'city_stats': city_stats,
+        'education_min_stats': education_min_stats,
+        'education_max_stats': education_max_stats,
+        'gender_stats': gender_stats,
+        'weekday_counts': weekday_counts,
+        'weeks': weeks,  # ارسال لیست هفته‌ها برای استفاده در تمپلیت
+        'selected_week': start_of_week,  # ارسال تاریخ شروع هفته انتخابی برای استفاده در تمپلیت
+    }
+    return render(request, 'reports.html', context)

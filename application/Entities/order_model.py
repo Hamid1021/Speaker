@@ -17,6 +17,9 @@ class OrderManage(models.Manager):
         
     def get_all_not_assign(self):
         return self.get_queryset().filter(is_assign=False)        
+    
+    def get_all_assign(self):
+        return self.get_queryset().filter(is_assign=True)     
 
     
 class Order(models.Model):
