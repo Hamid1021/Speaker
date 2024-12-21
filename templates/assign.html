@@ -23,11 +23,12 @@
         <a href="{% url 'application:do_assign' %}" class="btn btn-info float-right mb-3 mr-1">اتصال هوشمند سخنران به روضه</a>
         <a href="{% url 'application:sent_to_channel' %}" class="btn btn-success float-right mb-3 mr-1">ارسال به ایتا</a>
         <a href="{% url 'application:list_assign' %}" target="_blank" class="btn btn-outline-dark float-right mb-3 mr-1">سخنرانی‌های ارسال شده ایتا</a>
-        <a href="{% url 'admin:index' %}" target="_blank" class="btn btn-success float-right mb-3 mr-1">پنل ادمین</a>
+        <a href="{% url 'admin:index' %}" class="btn btn-success float-right mb-3 mr-1">پنل ادمین</a>
         {% if request.user.is_authenticated %}
-            <a href="{% url 'account:logout' %}" target="_blank" class="btn btn-danger float-right mb-3 mr-1">خروج از پنل ادمین</a>
+            <a href="{% url 'application:reports' %}" class="btn btn-outline-primary float-right mb-3 mr-1">گزارشات</a>
+            <a href="{% url 'account:logout' %}" class="btn btn-danger float-right mb-3 mr-1">خروج از پنل ادمین</a>
         {% endif %}
-        <a style="font-size: xx-large;" id="start_time" class="lead ml-2 text-success"></a>
+        <a style="font-size: x-large;" id="start_time" class="lead ml-2 text-success"></a>
         
         <table dir="rtl" class="table table-active table-bordered table-dark table-striped text-center">
             <thead>

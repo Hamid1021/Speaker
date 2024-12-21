@@ -1,3 +1,4 @@
+#  templatetags/jalali_filters.py
 from django import template
 from extensions.utils import jalali_converter_date, gregorian_converter_date
 
@@ -9,7 +10,7 @@ def jalali_date(value):
 
 
 @register.filter(name='check_selected_date')
-def check_selected_date(value):
-    value = str(value)
-    print(value)
-    return gregorian_converter_date(value)
+def check_selected_date(self, value):
+    if (str(value)) == (self):
+        return True
+    return False

@@ -9,6 +9,8 @@ from datetime import timedelta, datetime
 from django.db.models import Count, Sum, Min
 from django.db.models.functions import TruncDay, TruncMonth, TruncYear
 import jdatetime
+import pytz
+import json
 
 
 def index(request):
@@ -239,7 +241,6 @@ def select_order_by_speaker(request):
 
 
 def get_jalali_weeks():
-    # دریافت تاریخ اولین سفارش
     first_order_date = AssignOrderSpeaker.objects.aggregate(first_date=Min('date'))['first_date']
     if not first_order_date:
         return []
@@ -254,13 +255,11 @@ def get_jalali_weeks():
 
 def get_jalali_weekday_counts(start_of_week):
     end_of_week = start_of_week + jdatetime.timedelta(days=6)
-    
-    # تبدیل به تاریخ میلادی برای استفاده در فیلتر دیتابیس
-    start_of_week_gregorian = start_of_week.togregorian()
-    end_of_week_gregorian = end_of_week.togregorian()
-    
-    # فیلتر سفارشات بر اساس تاریخ در جدول AssignOrderSpeaker
+    start_of_week_gregorian = datetime.combine(start_of_week, datetime.min.time()).replace(tzinfo=pytz.UTC)
+    end_of_week_gregorian = datetime.combine(end_of_week, datetime.min.time()).replace(tzinfo=pytz.UTC)
+
     assigned_orders = AssignOrderSpeaker.objects.filter(date__range=[start_of_week_gregorian, end_of_week_gregorian])
+
     weekdays = {
         "شنبه": 0,
         "یکشنبه": 1,
@@ -292,20 +291,38 @@ def get_jalali_weekday_counts(start_of_week):
     return weekday_counts
 
 def reports(request):
-    # دریافت پارامتر هفته از درخواست
+    if not request.user.is_authenticated:
+        return redirect("account:login")
+    
     week_param = request.GET.get('week')
     weeks = get_jalali_weeks()
     if week_param:
         try:
-            start_of_week = jdatetime.datetime.strptime(week_param, '%Y-%m-%d').date()
+            start_of_week = datetime.strptime(week_param, '%Y-%m-%d').date()
         except ValueError:
-            start_of_week = jdatetime.date.today() - jdatetime.timedelta(days=jdatetime.date.today().weekday())
+            start_of_week = datetime.today().date() - timedelta(days=datetime.today().weekday())
+        selected_week = week_param
     else:
-        today = jdatetime.date.today()
-        start_of_week = today - jdatetime.timedelta(days=today.weekday())
+        if weeks:
+            start_of_week = weeks[-1].togregorian()  # آخرین مورد لیست weeks را به میلادی تبدیل کنید
+            selected_week = start_of_week.strftime('%Y-%m-%d')
+        else:
+            today = datetime.today().date()
+            start_of_week = today - timedelta(days=today.weekday())
+            selected_week = start_of_week.strftime('%Y-%m-%d')
 
     # تعداد کل افراد شرکت کننده
     total_attendees = Order.objects.aggregate(total_attendees=Sum('num_attendees'))
+
+    # تعداد کل روضه‌های انجام شده در امروز
+    today = datetime.today()
+    total_today = AssignOrderSpeaker.objects.filter(date__date=today.date()).count()
+
+    # تعداد کل روضه‌های انجام شده در این ماه
+    total_month = AssignOrderSpeaker.objects.filter(date__year=today.year, date__month=today.month).count()
+
+    # تعداد کل روضه‌های انجام شده در این سال
+    total_year = AssignOrderSpeaker.objects.filter(date__year=today.year).count()
 
     # لیست همه شهرها و تعداد سفارشات هر شهر
     city_stats = Order.objects.values('city').annotate(count=Count('id')).order_by('-count')
@@ -319,15 +336,80 @@ def reports(request):
 
     # تعداد سفارشات در روزهای هفته انتخابی
     weekday_counts = get_jalali_weekday_counts(start_of_week)
-
+    
     context = {
         'total_attendees': total_attendees['total_attendees'],
+        'total_today': total_today,
+        'total_month': total_month,
+        'total_year': total_year,
         'city_stats': city_stats,
         'education_min_stats': education_min_stats,
         'education_max_stats': education_max_stats,
         'gender_stats': gender_stats,
         'weekday_counts': weekday_counts,
-        'weeks': weeks,  # ارسال لیست هفته‌ها برای استفاده در تمپلیت
-        'selected_week': start_of_week,  # ارسال تاریخ شروع هفته انتخابی برای استفاده در تمپلیت
+        'weeks': weeks,
+        'selected_week': selected_week,
     }
     return render(request, 'reports.html', context)
+
+
+def reports1(request):
+    if not request.user.is_authenticated:
+        return redirect("account:login")
+    week_param = request.GET.get('week')
+    weeks = get_jalali_weeks()
+    if week_param:
+        try:
+            start_of_week = datetime.strptime(week_param, '%Y-%m-%d').date()
+        except ValueError:
+            start_of_week = datetime.today().date() - timedelta(days=datetime.today().weekday())
+        selected_week = week_param
+    else:
+        if weeks:
+            start_of_week = weeks[-1].togregorian()  # آخرین مورد لیست weeks را به میلادی تبدیل کنید
+            selected_week = start_of_week.strftime('%Y-%m-%d')
+        else:
+            today = datetime.today().date()
+            start_of_week = today - timedelta(days=today.weekday())
+            selected_week = start_of_week.strftime('%Y-%m-%d')
+
+    # تعداد کل افراد شرکت کننده
+    total_attendees = Order.objects.aggregate(total_attendees=Sum('num_attendees'))
+
+    # تعداد کل روضه‌های انجام شده در امروز
+    today = datetime.today()
+    total_today = AssignOrderSpeaker.objects.filter(date__date=today.date()).count()
+
+    # تعداد کل روضه‌های انجام شده در این ماه
+    total_month = AssignOrderSpeaker.objects.filter(date__year=today.year, date__month=today.month).count()
+
+    # تعداد کل روضه‌های انجام شده در این سال
+    total_year = AssignOrderSpeaker.objects.filter(date__year=today.year).count()
+
+    # لیست همه شهرها و تعداد سفارشات هر شهر
+    city_stats = list(Order.objects.values('city').annotate(count=Count('id')).order_by('-count'))
+
+    # لیست حداقل و حداکثر مدارک تحصیلی و تعداد سفارشات هر کدام
+    education_min_stats = list(Order.objects.values('education_min_attendees').annotate(count=Count('id')).order_by('-count'))
+    education_max_stats = list(Order.objects.values('education_max_attendees').annotate(count=Count('id')).order_by('-count'))
+
+    # جنسیت افراد شرکت کننده و تعداد سفارشات
+    gender_stats = list(Order.objects.values('gender_attendees').annotate(count=Count('id')).order_by('-count'))
+
+    # تعداد سفارشات در روزهای هفته انتخابی
+    weekday_counts = get_jalali_weekday_counts(start_of_week)
+
+    context = {
+        'total_attendees': total_attendees['total_attendees'],
+        'total_today': total_today,
+        'total_month': total_month,
+        'total_year': total_year,
+        'city_stats': json.dumps(city_stats),
+        'education_min_stats': json.dumps(education_min_stats),
+        'education_max_stats': json.dumps(education_max_stats),
+        'gender_stats': json.dumps(gender_stats),
+        'weekday_counts': json.dumps(weekday_counts),
+        'weeks': weeks,
+        'selected_week': selected_week,
+    }
+    return render(request, 'reports1.html', context)

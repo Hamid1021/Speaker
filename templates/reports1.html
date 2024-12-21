@@ -1,0 +1,323 @@
+{% load jalali_filters %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>گزارشات</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <style>
+        h1, h2 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .content-section {
+            margin-bottom: 40px;
+        }
+        .form-inline label {
+            margin-right: 10px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 350px; /* حداکثر عرض */
+            margin: auto;
+        }
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+    </style>
+</head>
+<body>
+    <div dir="rtl" class="container mt-5 text-center">
+        <h1 class="text-center mb-5">گزارشات روضه ها</h1>
+        <div class="row">
+            <div class="col-auto">
+                <a href="{% url 'application:reports' %}" class="d-block btn btn-outline-dark float-right mb-3 mr-1">نمایش به صورت جدولی</a>
+                <a href="{% url 'admin:index' %}" class="btn btn-success float-right mb-3 mr-1">پنل ادمین</a>
+                <a href="{% url 'application:assign' %}" class="btn btn-outline-primary float-right mb-3 mr-1">اتصال هوشمند روضه به سخنران</a>
+                <a href="{% url 'account:logout' %}" class="btn btn-danger float-right mb-3 mr-1">خروج از پنل ادمین</a>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>خلاصه آمار</h2>
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>نوع آمار</th>
+                        <th>مقدار</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>تعداد کل افراد شرکت کننده در همه روضه ها</td>
+                        <td class="font-weight-bold">{{ total_attendees }}</td>
+                    </tr>
+                    <tr>
+                        <td>تعداد کل روضه‌های انجام شده در امروز</td>
+                        <td class="font-weight-bold">{{ total_today }}</td>
+                    </tr>
+                    <tr>
+                        <td>تعداد کل روضه‌های انجام شده در این ماه</td>
+                        <td class="font-weight-bold">{{ total_month }}</td>
+                    </tr>
+                    <tr>
+                        <td>تعداد کل روضه‌های انجام شده در این سال</td>
+                        <td class="font-weight-bold">{{ total_year }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+
+        <div class="content-section">
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h5>آمار روضه ها هر شهر</h5>
+                    <div class="chart-container">
+                        <canvas id="cityChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <h5>تعداد روضه ها با توجه به جنسیت حاظرین در روضه</h5>
+                    <div class="chart-container">
+                        <canvas id="genderChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h5>تعداد روضه ها با توجه به مدرک تحصیلی</h5>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h5>(حداقل مدرک تحصیلی افراد شرکت کننده)</h5>
+                    <div class="chart-container">
+                        <canvas id="educationMinChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <h5>(حداکثر مدرک تحصیلی افراد شرکت کننده)</h5>
+                    <div class="chart-container">
+                        <canvas id="educationMaxChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>تعداد روضه ها به تفکیک هفته انتخاب شده</h2>
+            <form method="get" class="mt-4">
+                <div class="form-row align-items-center">
+                    <div class="col-auto my-1 mx-2">
+                        <label for="week" class="mr-sm-2">انتخاب هفته:</label>
+                    </div>
+                    <div class="col-auto my-1 mx-2">
+                        <select id="week" name="week" class="custom-select mr-sm-2">
+                            {% for week in weeks %}
+                            <option value="{{ week.togregorian|date:"Y-m-d" }}" {% if week.togregorian|date:"Y-m-d"|check_selected_date:selected_week %}selected{% endif %}>
+                                {{ week.year }}-{{ week.month }}-{{ week.day }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto my-1 mx-2">
+                        <button type="submit" class="btn btn-outline-info">نمایش گزارش</button>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="chart-container">
+                        <canvas id="weekdayChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OG">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4/JzE3oCtvE02/ixXbtXrSiC2fFuwuP8bsKFmQg3chJBlJIVuM6cpj6NV">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // دریافت داده‌های شهرها
+        const cityStats = JSON.parse('{{ city_stats|escapejs }}');
+        const cityLabels = cityStats.map(stat => stat.city);
+        const cityData = cityStats.map(stat => stat.count);
+
+        // نمودار شهرها
+        new Chart(document.getElementById('cityChart'), {
+            type: 'pie',
+            data: {
+                labels: cityLabels,
+                datasets: [{
+                    label: 'تعداد روضه ها',
+                    data: cityData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // دریافت داده‌های حداقل مدرک تحصیلی
+        const educationMinStats = JSON.parse('{{ education_min_stats|escapejs }}');
+        const educationMinLabels = educationMinStats.map(stat => stat.education_min_attendees);
+        const educationMinData = educationMinStats.map(stat => stat.count);
+
+        // نمودار حداقل مدرک تحصیلی
+        new Chart(document.getElementById('educationMinChart'), {
+            type: 'pie',
+            data: {
+                labels: educationMinLabels,
+                datasets: [{
+                    label: 'تعداد روضه ها',
+                    data: educationMinData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // دریافت داده‌های حداکثر مدرک تحصیلی
+        const educationMaxStats = JSON.parse('{{ education_max_stats|escapejs }}');
+        const educationMaxLabels = educationMaxStats.map(stat => stat.education_max_attendees);
+        const educationMaxData = educationMaxStats.map(stat => stat.count);
+
+        // نمودار حداکثر مدرک تحصیلی
+        new Chart(document.getElementById('educationMaxChart'), {
+            type: 'pie',
+            data: {
+                labels: educationMaxLabels,
+                datasets: [{
+                    label: 'تعداد روضه ها',
+                    data: educationMaxData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // دریافت داده‌های جنسیت
+        const genderStats = JSON.parse('{{ gender_stats|escapejs }}');
+        const genderLabels = genderStats.map(stat => stat.gender_attendees);
+        const genderData = genderStats.map(stat => stat.count);
+
+        // نمودار جنسیت
+        new Chart(document.getElementById('genderChart'), {
+            type: 'pie',
+            data: {
+                labels: genderLabels,
+                datasets: [{
+                    label: 'تعداد روضه ها',
+                    data: genderData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // دریافت داده‌های روزهای هفته
+        const weekdayCounts = JSON.parse('{{ weekday_counts|escapejs }}');
+        const weekdayLabels = Object.keys(weekdayCounts);
+        const weekdayData = Object.values(weekdayCounts);
+
+        // نمودار روزهای هفته
+        new Chart(document.getElementById('weekdayChart'), {
+            type: 'pie',
+            data: {
+                labels: weekdayLabels,
+                datasets: [{
+                    label: 'تعداد روضه ها',
+                    data: weekdayData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
+

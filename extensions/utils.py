@@ -126,7 +126,7 @@ def jalali_converter(time):
     time_to_str = f"{time.year},{time.month},{time.day}"
     time_to_tuple = jalali.Gregorian(time_to_str).persian_tuple()
     mon = time_to_tuple[1] if time_to_tuple[1] > 9 else "0" + str(time_to_tuple[1])
-    day = time_to_tuple[2] if time_to_tuple[2] > 9 else "0" + str(time_to_tuple[1])
+    day = time_to_tuple[2] if time_to_tuple[2] > 9 else "0" + str(time_to_tuple[2])
     hou = time.hour if time.hour > 9 else "0" + str(time.hour)
     min = time.minute if time.minute > 9 else "0" + str(time.minute)
     sec = time.second if time.second > 9 else "0" + str(time.second)
@@ -139,7 +139,7 @@ def jalali_converter_date(time):
     time_to_str = f"{time.year},{time.month},{time.day}"
     time_to_tuple = jalali.Gregorian(time_to_str).persian_tuple()
     mon = time_to_tuple[1] if time_to_tuple[1] > 9 else "0" + str(time_to_tuple[1])
-    day = time_to_tuple[2] if time_to_tuple[2] > 9 else "0" + str(time_to_tuple[1])
+    day = time_to_tuple[2] if time_to_tuple[2] > 9 else "0" + str(time_to_tuple[2])
     output = f"{time_to_tuple[0]}/{mon}/{day}"
     return persian_numbers_converter(output)
 
@@ -149,7 +149,7 @@ def jalali_converter_en(time):
     time_to_str = f"{time.year},{time.month},{time.day}"
     time_to_tuple = jalali.Gregorian(time_to_str).persian_tuple()
     mon = time_to_tuple[1] if time_to_tuple[1] > 9 else "0" + str(time_to_tuple[1])
-    day = time_to_tuple[2] if time_to_tuple[2] > 9 else "0" + str(time_to_tuple[1])
+    day = time_to_tuple[2] if time_to_tuple[2] > 9 else "0" + str(time_to_tuple[2])
     hou = time.hour if time.hour > 9 else "0" + str(time.hour)
     min = time.minute if time.minute > 9 else "0" + str(time.minute)
     sec = time.second if time.second > 9 else "0" + str(time.second)
@@ -245,6 +245,6 @@ def gregorian_converter(time:str):
     return datetime(year, month, day, hour, minute, second)
 
 
-def gregorian_converter_date(time:str):
-    year, month, day = jalali.Persian(*[int(x) for x in time.split("/")]).gregorian_tuple()
+def gregorian_converter_date(time:str, spliter = "/"):
+    year, month, day = jalali.Persian(*[int(x) for x in time.split(spliter)]).gregorian_tuple()
     return datetime(year, month, day, 0, 0, 0)

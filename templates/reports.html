@@ -5,117 +5,182 @@
     <meta charset="UTF-8">
     <title>گزارشات</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <style>
+        h1, h2 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .content-section {
+            margin-bottom: 40px;
+        }
+        .form-inline label {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">گزارشات سفارشات</h1>
-        
-        <h2>تعداد کل افراد شرکت کننده در همه روضه ها</h2>
-        <p>{{ total_attendees }}</p>
-
-        <h2>آمار سفارشات هر شهر</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>شهر</th>
-                    <th>تعداد سفارشات</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for city in city_stats %}
-                <tr>
-                    <td>{{ city.city }}</td>
-                    <td>{{ city.count }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <h2>تعداد سفارشات با توجه به مدرک تحصیلی (حداقل مدرک تحصیلی افراد شرکت کننده)</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>حداقل مدرک تحصیلی</th>
-                    <th>تعداد سفارشات</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for education in education_min_stats %}
-                <tr>
-                    <td>{{ education.education_min_attendees }}</td>
-                    <td>{{ education.count }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <h2>تعداد سفارشات با توجه به مدرک تحصیلی (حداکثر مدرک تحصیلی افراد شرکت کننده)</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>حداکثر مدرک تحصیلی</th>
-                    <th>تعداد سفارشات</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for education in education_max_stats %}
-                <tr>
-                    <td>{{ education.education_max_attendees }}</td>
-                    <td>{{ education.count }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <h2>تعداد سفارشات با توجه به جنسیت حاظرین در روضه</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>جنسیت</th>
-                    <th>تعداد سفارشات</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for gender in gender_stats %}
-                <tr>
-                    <td>{{ gender.gender_attendees }}</td>
-                    <td>{{ gender.count }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <h2>تعداد سفارشات به تفکیک هفته انتخاب شده</h2>
-        <form method="get" class="mt-4">
-            <div class="form-group">
-                <label for="week">انتخاب هفته:</label>
-                <select id="week" name="week" class="form-control">
-                    {% for week in weeks %}
-                    <option value="{{ week.togregorian|date:"Y-m-d" }}" {% if week.togregorian|date:"Y-m-d"|check_selected_date == selected_week|check_selected_date %}selected{% endif %}>
-                        {{ week.year }}-{{ week.month }}-{{ week.day }}
-                    </option>
-                    {% endfor %}
-                </select>
+    <div dir="rtl" class="container mt-5 text-center">
+        <h1 class="text-center mb-5">گزارشات روضه ها</h1>
+        <div class="row">
+            <div class="col-auto">
+                <a href="{% url 'application:reports1' %}" class="btn btn-outline-dark float-right mb-3 mr-1">نمایش به صورت نموداری</a>
+                <a href="{% url 'admin:index' %}" class="btn btn-success float-right mb-3 mr-1">پنل ادمین</a>
+                <a href="{% url 'application:assign' %}" class="btn btn-outline-primary float-right mb-3 mr-1">اتصال هوشمند روضه به سخنران</a>
+                <a href="{% url 'account:logout' %}" class="btn btn-danger float-right mb-3 mr-1">خروج از پنل ادمین</a>
             </div>
-            <button type="submit" class="btn btn-primary">نمایش گزارش</button>
-        </form>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>روز</th>
-                    <th>تعداد سفارشات</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for day, count in weekday_counts.items %}
-                <tr>
-                    <td>{{ day }}</td>
-                    <td>{{ count }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        </div>
+
+        <div class="content-section">
+            <h2>خلاصه آمار</h2>
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>نوع آمار</th>
+                        <th>مقدار</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>تعداد کل افراد شرکت کننده در همه روضه ها</td>
+                        <td class="font-weight-bold">{{ total_attendees }}</td>
+                    </tr>
+                    <tr>
+                        <td>تعداد کل روضه‌های انجام شده در امروز</td>
+                        <td class="font-weight-bold">{{ total_today }}</td>
+                    </tr>
+                    <tr>
+                        <td>تعداد کل روضه‌های انجام شده در این ماه</td>
+                        <td class="font-weight-bold">{{ total_month }}</td>
+                    </tr>
+                    <tr>
+                        <td>تعداد کل روضه‌های انجام شده در این سال</td>
+                        <td class="font-weight-bold">{{ total_year }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>آمار روضه ها هر شهر</h2>
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th>شهر</th>
+                        <th>تعداد روضه ها</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for city in city_stats %}
+                    <tr>
+                        <td>{{ city.city }}</td>
+                        <td>{{ city.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>تعداد روضه ها با توجه به مدرک تحصیلی (حداقل مدرک تحصیلی افراد شرکت کننده)</h2>
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th>حداقل مدرک تحصیلی</th>
+                        <th>تعداد روضه ها</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for education in education_min_stats %}
+                    <tr>
+                        <td>{{ education.education_min_attendees }}</td>
+                        <td>{{ education.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>تعداد روضه ها با توجه به مدرک تحصیلی (حداکثر مدرک تحصیلی افراد شرکت کننده)</h2>
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th>حداکثر مدرک تحصیلی</th>
+                        <th>تعداد روضه ها</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for education in education_max_stats %}
+                    <tr>
+                        <td>{{ education.education_max_attendees }}</td>
+                        <td>{{ education.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>تعداد روضه ها با توجه به جنسیت حاظرین در روضه</h2>
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th>جنسیت</th>
+                        <th>تعداد روضه ها</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gender in gender_stats %}
+                    <tr>
+                        <td>{{ gender.gender_attendees }}</td>
+                        <td>{{ gender.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section">
+            <h2>تعداد روضه ها به تفکیک هفته انتخاب شده</h2>
+            <form method="get" class="mt-4">
+                <div class="form-row align-items-center">
+                    <div class="col-auto my-1 mx-2">
+                        <label for="week" class="mr-sm-2">انتخاب هفته:</label>
+                    </div>
+                    <div class="col-auto my-1 mx-2">
+                        <select id="week" name="week" class="custom-select mr-sm-2">
+                            {% for week in weeks %}
+                            <option value="{{ week.togregorian|date:"Y-m-d" }}" {% if week.togregorian|date:"Y-m-d"|check_selected_date:selected_week %}selected{% endif %}>
+                                {{ week.year }}-{{ week.month }}-{{ week.day }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto my-1 mx-2">
+                        <button type="submit" class="btn btn-outline-info">نمایش گزارش</button>
+                    </div>
+                </div>
+            </form>
+            <table class="table table-bordered table-hover table-striped mt-4">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>روز</th>
+                        <th>تعداد روضه ها</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day, count in weekday_counts.items %}
+                    <tr>
+                        <td>{{ day }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OG">
+</body>
+</html>
