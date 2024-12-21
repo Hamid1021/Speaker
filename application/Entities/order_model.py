@@ -1,4 +1,3 @@
-from typing import Iterable
 from django.db import models
 from application.Entities.channel_message_model import ChannelMessage
 from extensions.utils import jalali_converter_date, jalali_get_day_title, jalali_converter
@@ -26,7 +25,7 @@ class Order(models.Model):
     )
     phone = models.CharField("شماره همراه", null=True, blank=True, default="", max_length=15)
     date = models.DateField("تاریخ", null=True, blank=True)
-    time = models.TimeField("زمان", null=True, blank=True)
+    time = models.TimeField("ساعت روضه", null=True, blank=True)
     num_attendees = models.IntegerField("تعداد اعضای جلسه", null=True, blank=True, default=0,)
     gender_attendees = models.CharField("جنسیت حضار", null=True, blank=True, default="", max_length=255)
     education_min_attendees = models.CharField("حداقل سواد حاضران", null=True, blank=True, default="", max_length=255)

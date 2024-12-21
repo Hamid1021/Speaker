@@ -1,14 +1,12 @@
 from django.urls import path
 
 from account.views import register_user, login_user, logout_admin
-
 app_name = "account"
 
 urlpatterns = [
     path('login/', login_user, name='login'),
     path('logout/', logout_admin, name='logout'),
     path('register/', register_user, name='register'),
-
     # path('success_confrimed/<custom_user_id>/<int:code_send>/', ConfrimUserSuccessView.as_view(), name='Confrim_User_success'),
 
     # path('ResentCode/<custom_user_id>/', ResentCode.as_view(), name='resent_code'),

@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h-2z_0qp9p-e0aq#$uy7t1s_+*^c%$1%qjivui4$t#zx$#(^cb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 if DEBUG:
     ALLOWED_HOSTS = ["*"]
@@ -90,6 +90,9 @@ CSRF_TRUSTED_ORIGINS = ['http://62.3.41.209:8000', 'https://62.3.41.209:8000', '
 # SECURE_SSL_REDIRECT = True
 
 AUTH_USER_MODEL = "account.USER"
+LOGIN_URL = "account:login"
+LOGIN_REDIRECT_URL = "account:login"
+LOGOUT_REDIRECT_URL = "account:login"
 
 X_FRAME_OPTIONS = 'ALLOW-FROM 127.0.0.1'
 
@@ -228,6 +231,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'config.middleware.RedirectMiddleware',
+    'config.middleware.CustomLoginRequiredMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'config.urls'

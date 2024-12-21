@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
-from django.contrib.auth.models import Group
+# from django.contrib.auth.models import Group
 from account.models import USER
 from application.Entities.Speaker_model import Speaker
 
@@ -17,11 +17,10 @@ def login_user(request):
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
             user = authenticate(request, username=username, password=password)
-            if not user.is_superuser:
-                request.session.set_expiry(20 * 60)
-                login(request, user=user)
-                return redirect(reverse("application:select_order_by_speaker"))
             login(request, user=user)
+            if not user.is_superuser:
+                # request.session.set_expiry(20 * 60)
+                return redirect(reverse("application:select_order_by_speaker"))
             # return redirect(reverse("admin:index"))
             return redirect(reverse("application:assign"))
 
@@ -65,11 +64,11 @@ def register_user(request):
                     education_attendees=education,
                 )
 
-                # بررسی وجود گروه سخنرانان و افزودن کاربر به گروه
-                speaker_group, created = Group.objects.get_or_create(name="سخنرانان")
-                speaker_group.user_set.add(user)
+                # # بررسی وجود گروه سخنرانان و افزودن کاربر به گروه
+                # speaker_group, created = Group.objects.get_or_create(name="سخنرانان")
+                # speaker_group.user_set.add(user)
 
-                return redirect(reverse("application:select_order_by_speaker"))
+                return redirect(reverse("account:login"))
             except Exception as e:
                 print(e)
                 er_message = "مشکلی وجود دارد لطفا از راه های ارتباطی به ما اطلاع بدهید"
